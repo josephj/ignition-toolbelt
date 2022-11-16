@@ -1,0 +1,7 @@
+query acknowledgements {
+  acknowledgements {
+    id
+    level
+    updatedAt
+  }
+}

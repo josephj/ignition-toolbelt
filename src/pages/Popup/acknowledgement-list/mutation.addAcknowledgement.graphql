@@ -1,0 +1,9 @@
+mutation acknowledgementAdd($id: ID!, $level: AcknowledgementLevel!) {
+  acknowledgementAdd(input: { id: $id, level: $level }) {
+    acknowledgements {
+      id
+      level
+      updatedAt
+    }
+  }
+}
