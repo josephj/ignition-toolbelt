@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "node utils/build.js",
+    "dist": "NODE_ENV=production yarn build",
     "start": "node utils/webserver.js",
     "prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
     "graphql:get-schema": "get-graphql-schema http://localhost:3000/auth-api/graphql > graphql/schemas/auth_api.graphql; get-graphql-schema http://localhost:3000/dev_api/graphql > graphql/schemas/dev_api.graphql; get-graphql-schema http://localhost:3000/graphql > graphql/schemas/ignition.graphql --header 'Authorization=Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ1c3J0a25fbXhmaGtmNmU3cXp5am9pYWxpbXEiLCJpYXQiOjE3MDc3NjcwNjMsImV4cCI6MTcwNzc2ODg2Mywic3ViIjoidXNlcl9tdWQ3Zm5nZTdxenk3dGlhbmJ0cSIsInNjb3BlcyI6WyJtZmEiLCJhcHAiXSwic2Vzc2lvbl9pZCI6IjY0OGRkOWJmYWYwMTk4N2ZiNDM2ZjNjY2Q3NTgyNjQ0MTM3MjhlYTQ1YzkwYmY3OWU4NGYzYWRmYzQ5MmIzYTkifQ.Wj2oF4YBF1e4Gebw6zzROKDzjJklQok0-1y2iAx8EV0'",

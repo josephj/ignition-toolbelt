@@ -1,16 +1,17 @@
-import { Stack, Flex, Button, Text } from '@chakra-ui/react';
-import { faGem } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Stack, Flex, Button } from '@chakra-ui/react';
 import React from 'react';
+import { Env } from './types';
 
 // @ts-ignore
 import logo from '../../assets/img/logo.svg';
 
 import './index.css';
+import { getUrlByEnv } from './utils';
 
-export const Launch = ({ hostUrl }: { hostUrl: string }) => {
-  const handleRedirect = () => {
-    chrome.tabs.update({ url: hostUrl });
+export const Launch = () => {
+  const handleRedirect = (env: Env) => async () => {
+    const url = getUrlByEnv(env);
+    await chrome.tabs.update({ url });
   };
 
   return (
@@ -25,11 +26,17 @@ export const Launch = ({ hostUrl }: { hostUrl: string }) => {
       <Stack spacing="24px" p="50px">
         <img src={logo} className="App-logo" alt="logo" />
         <Stack>
-          <Button colorScheme="purple" onClick={handleRedirect} size="lg">
-            <FontAwesomeIcon icon={faGem} />{' '}
-            <Text fontSize="16px" ml="5px">
-              Launch Ignition App
-            </Text>
+          <Button
+            colorScheme="purple"
+            onClick={handleRedirect(Env.DEVELOPMENT)}
+          >
+            Local
+          </Button>
+          <Button colorScheme="purple" onClick={handleRedirect(Env.DEMO)}>
+            Demo
+          </Button>
+          <Button colorScheme="purple" onClick={handleRedirect(Env.PRODUCTION)}>
+            Production
           </Button>
         </Stack>
       </Stack>

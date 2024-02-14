@@ -1,24 +1,47 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ApolloProvider } from '@apollo/client';
 
-import { createApolloClient } from './utils';
+import {
+  checkAvailability,
+  createApolloClient,
+  getActiveTabUrl,
+  getHostUrl,
+} from './utils';
 import { Launch } from './launch';
 import { AppStatus } from './app-status';
 import { PopupContent } from './popup-content';
 import { Login } from './login';
 
-export const Popup = ({ hostUrl }: { hostUrl: string }) => {
+export const Popup = () => {
   const [token, setToken] = useState<string>();
-
   useEffect(() => {
     chrome.storage.local.get(['accessToken']).then(({ accessToken }) => {
       setToken(accessToken);
     });
   }, []);
 
+  const handleTabUpdated = useCallback((tabId: number) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabId === tabs[0].id) {
+        setHostUrl(getHostUrl(tabs[0].url));
+      }
+    });
+  }, []);
+
+  const [hostUrl, setHostUrl] = useState<string>();
+  useEffect(() => {
+    getActiveTabUrl().then((url) => {
+      setHostUrl(getHostUrl(url));
+    });
+    chrome.tabs.onUpdated.addListener(handleTabUpdated);
+    return () => {
+      chrome.tabs.onUpdated.removeListener(handleTabUpdated);
+    };
+  }, [handleTabUpdated]);
+
   const apolloClient = useMemo(
     () =>
-      token
+      token && hostUrl
         ? createApolloClient({
             hostUrl,
             accessToken: token,
@@ -32,8 +55,9 @@ export const Popup = ({ hostUrl }: { hostUrl: string }) => {
     setToken(accessToken);
   };
 
-  if (!hostUrl) {
-    return <Launch hostUrl="http://localhost:3000" />;
+  const isIgnition = hostUrl && checkAvailability(hostUrl);
+  if (!isIgnition) {
+    return <Launch />;
   }
 
   if (!token) {

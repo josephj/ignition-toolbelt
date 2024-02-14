@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useCurrentPracticeQuery } from '../../../generated/hooks';
 import { Button, HStack } from '@chakra-ui/react';
-import { getHostUrl } from '../utils';
+import { getActiveTabUrl, getHostUrl } from '../utils';
 import { openTab } from './utils';
 
 export const Shortcuts = () => {
   const { data, loading } = useCurrentPracticeQuery();
-  const [hostUrl, setHostUrl] = useState<string>();
+  const [hostUrl, setHostUrl] = useState<string | null>();
 
   useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-      const tabUrl = tabs[0].url || '';
-      const baseUrl = getHostUrl(tabUrl);
-      setHostUrl(baseUrl);
+    getActiveTabUrl().then((tabUrl) => {
+      const url = getHostUrl(tabUrl);
+      setHostUrl(url);
     });
   }, []);
 

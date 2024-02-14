@@ -75,7 +75,7 @@ export const PopupContent = ({
           </Heading>
         </Stack>
 
-        <Accordion allowMultiple allowToggle>
+        <Accordion allowMultiple>
           <AccordionItem>
             <AccordionButton>
               <HStack flex="1">
