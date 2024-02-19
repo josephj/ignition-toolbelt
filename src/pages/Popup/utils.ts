@@ -4,14 +4,16 @@ import { Env } from './types';
 export const createApolloClient = ({
   hostUrl,
   accessToken,
+  headers,
 }: {
   hostUrl: string;
-  accessToken: string;
+  accessToken?: string;
+  headers?: Record<string, string>;
 }) =>
   new ApolloClient({
     uri: `${hostUrl}/graphql`,
     cache: new InMemoryCache(),
-    headers: { Authorization: `Bearer ${accessToken}` },
+    headers: { Authorization: `Bearer ${accessToken}`, ...headers },
   });
 
 const AVAILABLE_HOSTS = [

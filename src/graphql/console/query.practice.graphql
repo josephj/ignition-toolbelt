@@ -1,0 +1,6 @@
+query practice($id: ID!) {
+  practice(id: $id) {
+    id
+    referenceNumber
+  }
+}

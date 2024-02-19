@@ -19,9 +19,11 @@
   "content_scripts": [
     {
       "matches": [
-        "https://go.ignitionapp.com/*",
-        "https://demo.ignitionapp.com/*",
-        "http://localhost:3000/*"
+        "http://localhost:3000/*",
+        "https://*.ignitionapp.com/*",
+        "https://github.com/*/pull/*",
+        "https://ignitionapp.atlassian.net/browse/*",
+        "https://ignitionapp.atlassian.net/jira/servicedesk/projects/HELP/*"
       ],
       "js": [
         "contentScript.bundle.js"
