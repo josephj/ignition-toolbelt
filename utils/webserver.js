@@ -30,9 +30,8 @@ var server = new WebpackDevServer(
     https: false,
     hot: true,
     liveReload: false,
-    client: {
-      webSocketTransport: 'ws',
-    },
+    client: false,
+    compress: false,
     webSocketServer: 'ws',
     host: 'localhost',
     port: env.PORT,
