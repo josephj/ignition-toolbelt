@@ -1,3 +1,8 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+
+import { App } from './App';
+
 import { setCaptureAccessToken } from './set-capture-access-token';
 import { setComicSans } from './set-comics-sans';
 import { setMissionControlRedirect } from './set-mission-control-redirect';
@@ -25,3 +30,14 @@ chrome.runtime.onMessage.addListener(async (request) => {
   if (type === NPE_EXIT) await setNpeExit(value);
   if (type === MISSION_CONTROL_REDIRECT) await setMissionControlRedirect(value);
 });
+
+let rootEl = document.getElementById('ignition-toolbelt-app');
+if (!rootEl) {
+  rootEl = document.createElement('div');
+  if (document.body) {
+    document.body.appendChild(rootEl);
+  }
+}
+
+const root = createRoot(rootEl);
+root.render(<App />);
