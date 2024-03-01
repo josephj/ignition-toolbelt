@@ -8,12 +8,13 @@ import { setComicSans } from './set-comics-sans';
 import { setMissionControlRedirect } from './set-mission-control-redirect';
 import { setNpeExit } from './set-npe-exit';
 import { setGithubTicketAutolink } from './set-github-ticket-autolink';
-// import { setJiraMissionControlLogin } from './set-jira-mission-control-login';
+import { setJiraMissionControlLogin } from './set-jira-mission-control-login/set-jira-mission-control-login';
 import {
   COMIC_SANS,
   MISSION_CONTROL_REDIRECT,
   NPE_EXIT,
 } from '../../lib/features';
+import { checkAvailability } from '../Popup/utils';
 
 window.addEventListener('load', async () => {
   await setCaptureAccessToken();
@@ -21,7 +22,7 @@ window.addEventListener('load', async () => {
   await setMissionControlRedirect();
   await setNpeExit();
   await setGithubTicketAutolink();
-  // await setJiraMissionControlLogin();
+  await setJiraMissionControlLogin();
 });
 
 chrome.runtime.onMessage.addListener(async (request) => {
@@ -31,13 +32,19 @@ chrome.runtime.onMessage.addListener(async (request) => {
   if (type === MISSION_CONTROL_REDIRECT) await setMissionControlRedirect(value);
 });
 
-let rootEl = document.getElementById('ignition-toolbelt-app');
-if (!rootEl) {
-  rootEl = document.createElement('div');
-  if (document.body) {
-    document.body.appendChild(rootEl);
-  }
-}
+(() => {
+  const url = window.location.href;
+  const isWidgetAvailable = checkAvailability(url);
+  if (!isWidgetAvailable) return;
 
-const root = createRoot(rootEl);
-root.render(<App />);
+  let rootEl = document.getElementById('ignition-toolbelt-app');
+  if (!rootEl) {
+    rootEl = document.createElement('div');
+    if (document.body) {
+      document.body.appendChild(rootEl);
+    }
+  }
+
+  const root = createRoot(rootEl);
+  root.render(<App />);
+})();

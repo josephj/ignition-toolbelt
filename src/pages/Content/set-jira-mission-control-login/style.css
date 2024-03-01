@@ -1,0 +1,28 @@
+.ignt-jira-mission-control-login {
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  display: inline-flex;
+  font-size: 11px;
+  text-decoration: none;
+  padding: 3px 10px;
+  position: absolute;
+}
+
+.ignt-jira-mission-control-login-logo {
+  width: 12px;
+  height: 12px;
+}
+
+.ignt-jira-mission-control-login-link.disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  outline: 0;
+}
+
+.ignt-jira-mission-control-login-link.disabled:link,
+.ignt-jira-mission-control-login-link.disabled:visited {
+  color: #333;
+  outline: 0;
+  text-decoration: none;
+}
