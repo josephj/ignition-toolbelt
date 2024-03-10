@@ -1,24 +1,20 @@
 import React from 'react';
+import Draggable from 'react-draggable';
+
+import { AppWrapper } from './app-wrapper';
+import { Bubble } from './bubble';
+import { useBoolean } from '@chakra-ui/react';
+import { Panel } from './panel';
 
 export const App = () => {
+  const [isPanelVisible, setPanelVisibility] = useBoolean(false);
+
   return (
-    <div
-      style={{
-        alignItems: 'center',
-        background: '#369',
-        borderRadius: '50%',
-        color: '#fff',
-        display: 'flex',
-        justifyContent: 'center',
-        height: '100px',
-        left: '20px',
-        position: 'fixed',
-        bottom: '20px',
-        width: '100px',
-        zIndex: 9999,
-      }}
-    >
-      Hello World
-    </div>
+    <AppWrapper>
+      <Bubble onClick={setPanelVisibility.toggle} />
+      {isPanelVisible && (
+        <Panel isOpen={isPanelVisible} onClose={setPanelVisibility.off} />
+      )}
+    </AppWrapper>
   );
 };

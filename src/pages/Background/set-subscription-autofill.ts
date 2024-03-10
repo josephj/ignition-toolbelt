@@ -2,19 +2,17 @@
   const filters = {
     url: [
       {
-        hostEquals: 'ignitionapp.atlassian.net',
-        pathContains: '/browse/',
+        hostContains: 'ignitionapp.com',
+        pathContains: '/account/subscription',
       },
-      {
-        hostEquals: 'ignitionapp.atlassian.net',
-        pathContains: '/jira/servicedesk',
-      },
+      { hostContains: 'localhost', pathContains: '/account/subscription' },
+      { hostEquals: 'api.recurly.com', pathContains: '/js/v1/field.html' },
     ],
   };
 
   const handleLoadPage = ({ tabId, url }: { tabId: number; url: string }) => {
     chrome.tabs.sendMessage(tabId, {
-      type: 'set-jira-mission-control-login',
+      type: 'set-subscription-autofill',
       value: url,
     });
   };

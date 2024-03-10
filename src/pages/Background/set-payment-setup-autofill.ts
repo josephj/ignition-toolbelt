@@ -2,19 +2,16 @@
   const filters = {
     url: [
       {
-        hostEquals: 'ignitionapp.atlassian.net',
-        pathContains: '/browse/',
+        hostContains: 'ignitionapp.com',
+        pathContains: '/settings/payments',
       },
-      {
-        hostEquals: 'ignitionapp.atlassian.net',
-        pathContains: '/jira/servicedesk',
-      },
+      { hostContains: 'localhost', pathContains: '/settings/payments' },
     ],
   };
 
   const handleLoadPage = ({ tabId, url }: { tabId: number; url: string }) => {
     chrome.tabs.sendMessage(tabId, {
-      type: 'set-jira-mission-control-login',
+      type: 'set-payment-setup-autofill',
       value: url,
     });
   };

@@ -15,6 +15,10 @@ import {
   NPE_EXIT,
 } from '../../lib/features';
 import { checkAvailability } from '../Popup/utils';
+import { setPaymentSetupAutofill } from './set-payment-setup-autofill';
+import { setSignupAutofill } from './set-signup-autofill';
+import { setStripeConnectAutofill } from './set-stripe-connect-autofill';
+import { setSubscriptionAutofill } from './set-subscription-autofill';
 
 window.addEventListener('load', async () => {
   await setCaptureAccessToken();
@@ -23,6 +27,10 @@ window.addEventListener('load', async () => {
   await setNpeExit();
   await setGithubTicketAutolink();
   await setJiraMissionControlLogin();
+  await setSignupAutofill();
+  await setSubscriptionAutofill();
+  await setPaymentSetupAutofill();
+  await setStripeConnectAutofill();
 });
 
 chrome.runtime.onMessage.addListener(async (request) => {

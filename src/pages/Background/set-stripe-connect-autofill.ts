@@ -2,19 +2,15 @@
   const filters = {
     url: [
       {
-        hostEquals: 'ignitionapp.atlassian.net',
-        pathContains: '/browse/',
-      },
-      {
-        hostEquals: 'ignitionapp.atlassian.net',
-        pathContains: '/jira/servicedesk',
+        hostEquals: 'connect.stripe.com',
+        pathContains: '/setup/',
       },
     ],
   };
 
   const handleLoadPage = ({ tabId, url }: { tabId: number; url: string }) => {
     chrome.tabs.sendMessage(tabId, {
-      type: 'set-jira-mission-control-login',
+      type: 'set-stripe-connect-autofill',
       value: url,
     });
   };

@@ -30,6 +30,7 @@ import { AcknowledgementList } from './acknowledgement-list';
 import { RefinedIgnition } from './refined-ignition';
 import { CreateNewAccount } from './create-new-account';
 import { Shortcuts } from './shortcuts';
+import { getActiveTabUrl, getHostUrl } from './utils';
 
 const QUERY = gql`
   query GetCurrentPractice {
@@ -48,12 +49,20 @@ export const PopupContent = ({
   const { data } = useQuery(QUERY);
   const { loading, currentPractice } = data || {};
   const [token, setToken] = useState();
+  const [cookiesValue, setCookiesValue] = useState('');
 
   useEffect(() => {
     chrome.storage.local.get(['accessToken']).then(({ accessToken }) => {
       setToken(accessToken);
     });
-  }, [setToken]);
+
+    getActiveTabUrl().then((url) => {
+      const hostUrl = getHostUrl(url);
+      chrome.cookies.getAll({ url: hostUrl }, (cookies) => {
+        setCookiesValue(JSON.stringify(cookies));
+      });
+    });
+  }, []);
 
   if (loading) {
     return (
@@ -148,6 +157,21 @@ export const PopupContent = ({
             </AccordionButton>
             <AccordionPanel>
               <Textarea fontSize="11px" height="140px" value={token} />
+            </AccordionPanel>
+          </AccordionItem>
+
+          <AccordionItem>
+            <AccordionButton>
+              <HStack flex="1">
+                <FontAwesomeIcon icon={faUserSecret} />
+                <Heading as="h2" size="sm" isTruncated>
+                  Cookies
+                </Heading>
+              </HStack>
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel>
+              <Textarea fontSize="11px" height="140px" value={cookiesValue} />
             </AccordionPanel>
           </AccordionItem>
         </Accordion>

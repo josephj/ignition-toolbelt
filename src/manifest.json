@@ -22,8 +22,10 @@
         "http://localhost:3000/*",
         "https://*.ignitionapp.com/*",
         "https://github.com/*/pull/*",
+        "https://api.recurly.com/js/v1/field.html",
         "https://ignitionapp.atlassian.net/browse/*",
-        "https://ignitionapp.atlassian.net/jira/servicedesk/projects/HELP/*"
+        "https://ignitionapp.atlassian.net/jira/servicedesk/projects/HELP/*",
+        "https://connect.stripe.com/setup/*"
       ],
       "js": [
         "contentScript.bundle.js"
@@ -37,7 +39,8 @@
     "storage",
     "tabs",
     "cookies",
-    "management"
+    "management",
+    "webNavigation"
   ],
   "host_permissions": [
     "https://*.ignitionapp.com/",

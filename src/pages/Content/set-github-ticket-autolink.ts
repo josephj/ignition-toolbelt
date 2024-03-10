@@ -1,34 +1,22 @@
-const URI_REGEXP =
-  /https:\/\/github.com\/ignitionapp\/Practice-Ignition\/pull\/\d+/;
+const TICKET_REGEXP = /(\b[A-Z]{1,10}-\d{1,6}\b)(?!([^<]+)?>)(?![\w-])/g;
+const SELECTOR = '.js-issue-title, .js-comment-body';
+const JIRA_URL = 'https://ignitionapp.atlassian.net/browse/';
 
-export const setGithubTicketAutolink = () => {
-  const callback = () => {
-    const isMatchUrl = window.location.href.match(URI_REGEXP);
-    if (!isMatchUrl) {
-      return;
-    }
-
-    const ticketRegex = /(\b[A-Z]{1,10}-\d{1,6}\b)(?!([^<]+)?>)(?![\w-])/g;
-    const matchEls = document.querySelectorAll(
-      '.js-issue-title, .js-comment-body '
-    ) as NodeListOf<HTMLElement>;
-
-    if (!matchEls.length) {
-      return;
-    }
-
+const run = () => {
+  const matchEls = document.querySelectorAll<HTMLElement>(SELECTOR);
+  if (matchEls.length) {
     matchEls.forEach((el) => {
       el.innerHTML = el.innerHTML.replace(
-        ticketRegex,
+        TICKET_REGEXP,
         (match) =>
-          `<a href="https://ignitionapp.atlassian.net/browse/${match}" target="_blank" title="${match}">${match}</a>`
+          `<a href="${JIRA_URL}${match}" target="_blank" title="${match}">${match}</a>`
       );
     });
-  };
+  }
+};
 
-  document.addEventListener('turbo:load', callback);
-  window.addEventListener('beforeunload', () => {
-    window.removeEventListener('popstate', callback);
+export const setGithubTicketAutolink = () => {
+  chrome.runtime.onMessage.addListener(({ type }, sender, sendResponse) => {
+    if (type === 'set-github-ticket-autolink') run();
   });
-  callback();
 };

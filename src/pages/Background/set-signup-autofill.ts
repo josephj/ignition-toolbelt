@@ -2,19 +2,27 @@
   const filters = {
     url: [
       {
-        hostEquals: 'ignitionapp.atlassian.net',
-        pathContains: '/browse/',
+        hostContains: 'ignitionapp.com',
+        pathContains: '/sign-up',
       },
       {
-        hostEquals: 'ignitionapp.atlassian.net',
-        pathContains: '/jira/servicedesk',
+        hostContains: 'ignitionapp.com',
+        pathContains: '/welcome',
+      },
+      {
+        hostContains: 'localhost',
+        pathContains: '/sign-up',
+      },
+      {
+        hostContains: 'localhost',
+        pathContains: '/welcome',
       },
     ],
   };
 
   const handleLoadPage = ({ tabId, url }: { tabId: number; url: string }) => {
     chrome.tabs.sendMessage(tabId, {
-      type: 'set-jira-mission-control-login',
+      type: 'set-signup-autofill',
       value: url,
     });
   };
@@ -23,6 +31,5 @@
     handleLoadPage,
     filters
   );
-
   chrome.webNavigation.onCompleted.addListener(handleLoadPage, filters);
 })();

@@ -1,6 +1,10 @@
+import './set-github-ticket-autolink';
 import './set-ignition-credentials';
-import './set-mission-control-credentials';
 import './set-jira-mission-control-login';
+import './set-mission-control-credentials';
+import './set-payment-setup-autofill';
+import './set-signup-autofill';
+import './set-subscription-autofill';
 
 import { getActiveTabUrl, getHostUrl } from '../Popup/utils';
 

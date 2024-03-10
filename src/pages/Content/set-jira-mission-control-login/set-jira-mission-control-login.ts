@@ -1,15 +1,70 @@
-import {
-  makeIgnitionRequest,
-  makeMissionControlRequest,
-} from '../../../lib/graphql';
 import './style.css';
+import {
+  checkMissionControlLogin,
+  checkPracticeLogin,
+  getPracticeId,
+} from './utils';
+import { q, wait, waitForElement } from '../lib';
+import { makeMissionControlRequest } from '../../../lib/graphql';
 
-const URI_REGEXP = /https:\/\/ignitionapp.atlassian.net\/browse\//;
-const URI_REGEXP2 = /https:\/\/ignitionapp.atlassian.net\/jira\/servicedesk\//;
 const DATA_ATTR = 'data-ignition-practice-reference-number';
 const LINK_CLASSNAME = 'ignt-jira-mission-control-login-link';
+const LINK_URL = 'https://go.ignitionapp.com/console/practice/';
+const UNHANDLED_LINK_SELECTOR = `a[href^="${LINK_URL}"]:not([${DATA_ATTR}])`;
 
 const iconUrl = chrome.runtime.getURL('icon-34.png');
+
+const handleClickMissionControlLogin = async (e: MouseEvent) => {
+  e.preventDefault();
+  const linkEl = e.target as HTMLLinkElement;
+  const targetUrl = 'https://go.ignitionapp.com/console';
+  const settings = 'width=800,height=800,left=100,top=100';
+  const newWindow = window.open(targetUrl, '_blank', settings);
+
+  linkEl.classList.add('disabled');
+  const timer = setInterval(() => {
+    if (!newWindow) {
+      linkEl.innerHTML = 'Reloading...';
+      window.location.reload();
+      clearTimeout(timer);
+    }
+  }, 1000);
+};
+
+const handleClick = async (e: MouseEvent) => {
+  console.log('[DEBUG] handleClick()');
+
+  e.preventDefault();
+
+  const linkEl = e.target as HTMLLinkElement;
+  const targetUrl = linkEl.href;
+  const settings = 'width=1,height=1,left=-1000,top=-1000';
+  const newWindow = window.open(targetUrl, '_blank', settings);
+  linkEl.innerHTML = 'Logging in...';
+  linkEl.classList.add('disabled');
+
+  if (!newWindow) {
+    return;
+  }
+
+  await wait(1000);
+
+  newWindow.close();
+  try {
+    const referenceNumber = linkEl.getAttribute(DATA_ATTR);
+    if (referenceNumber) {
+      const hasLogin = await checkPracticeLogin({ referenceNumber });
+      if (hasLogin) {
+        linkEl.classList.add('disabled');
+        linkEl.innerHTML = `You've logged in`;
+      }
+    }
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.error(e.message);
+    }
+  }
+};
 
 const renderContainer = (rootEl: HTMLElement, practiceId: string) => {
   console.log(`[DEBUG] renderContainer(rootEl, practiceId = ${practiceId})`);
@@ -28,128 +83,72 @@ const renderContainer = (rootEl: HTMLElement, practiceId: string) => {
   return containerEl;
 };
 
-const render = async () => {
-  console.log('[DEBUG] render() is executed');
-  const selectors = 'a[href^="https://go.ignitionapp.com/console/practice/"]';
-  const targetEls = document.querySelectorAll(
-    selectors
-  ) as NodeListOf<HTMLElement>;
+const run = async (targetEl: HTMLLinkElement) => {
+  console.log(`[DEBUG] run`, targetEl);
+  const href = targetEl.getAttribute('href');
+  if (!href) return;
 
-  if (!targetEls.length) {
-    return;
-  }
+  const practiceId = getPracticeId(href);
+  if (!practiceId) return;
 
-  targetEls.forEach((el) => {
-    const practiceId = el
-      .getAttribute('href')
-      ?.replace('https://go.ignitionapp.com/console/practice/', '');
+  const containerEl = renderContainer(targetEl, practiceId);
+  const linkEl = q<HTMLLinkElement>(`.${LINK_CLASSNAME}`, containerEl);
+  if (!linkEl) return;
 
-    if (!practiceId || !el || el.hasAttribute(DATA_ATTR)) {
+  try {
+    const isMissionControlLogin = await checkMissionControlLogin();
+    console.log('[DEBUG] run(): isMissionControlLogin', isMissionControlLogin);
+    if (!isMissionControlLogin) {
+      linkEl.innerHTML = `Login to Mission Control`;
+      linkEl.addEventListener('click', handleClickMissionControlLogin);
+      linkEl.setAttribute('href', 'https://go.ignitionapp.com/console');
+      linkEl.classList.remove('disabled');
+      linkEl.dataset.ignitionPracticeReferenceNumber = 'mission-control';
       return;
     }
-    const containerEl = renderContainer(el, practiceId);
 
-    makeMissionControlRequest({
+    const { practice } = await makeMissionControlRequest({
       query: `query practice($id: ID!) { practice(id: $id) { referenceNumber } }`,
       variables: { id: practiceId },
-    })
-      .then(({ practice }) => {
-        const linkEl: HTMLLinkElement | null = containerEl.querySelector(
-          `.${LINK_CLASSNAME}`
-        );
-        if (linkEl) {
-          linkEl.dataset.ignitionPracticeReferenceNumber =
-            practice.referenceNumber;
-          const targetUrl = `https://go.ignitionapp.com/admin/sign_in_as_support/${practice.referenceNumber}`;
-          linkEl.setAttribute('href', targetUrl);
-          linkEl.innerHTML = 'Log in as the account';
-          linkEl.classList.remove('disabled');
-        }
-      })
-      .catch((error: unknown) => {
-        if (error instanceof Error) {
-          console.error(error.message);
-        }
-      });
+    });
+    const { referenceNumber } = practice;
+    const targetUrl = `https://go.ignitionapp.com/admin/sign_in_as_support/${practice.referenceNumber}`;
+    linkEl.dataset.ignitionPracticeReferenceNumber = referenceNumber;
+    linkEl.setAttribute('href', targetUrl);
 
-    // TODO: Check if the user is already logged in after it retrieves the reference number
-  });
-};
-
-const bind = () => {
-  console.log('[DEBUG] bind()');
-
-  const checkLogin = async ({
-    referenceNumber,
-  }: {
-    referenceNumber: string;
-  }) => {
-    console.log(
-      `[DEBUG] checkLogin({ referenceNumber = "${referenceNumber}" })`
-    );
-    try {
-      const { currentPractice } = await makeIgnitionRequest({
-        query: `query { currentPractice { referenceNumber } }`,
-        variables: {},
-      });
-      return currentPractice?.referenceNumber === referenceNumber;
-    } catch (e) {
-      if (e instanceof Error) {
-        console.error(e.message);
-      }
+    const hasPracticeLogin = await checkPracticeLogin({ referenceNumber });
+    console.log('[DEBUG] run: hasPracticeLogin', hasPracticeLogin);
+    if (hasPracticeLogin) {
+      linkEl.innerHTML = `You've logged in`;
+    } else {
+      linkEl.innerHTML = 'Log in as the account';
+      linkEl.classList.remove('disabled');
+      linkEl.addEventListener('click', handleClick);
     }
-  };
-
-  const handleClick = (e: MouseEvent) => {
-    console.log('[DEBUG] handleClick()');
-    const linkEl = e.target as HTMLLinkElement;
-    if (!linkEl.matches('.ignt-jira-mission-control-login-link')) {
-      return;
+  } catch (e) {
+    if (e instanceof Error) {
+      linkEl.innerHTML = 'Error';
+      console.error(e.message);
     }
-
-    e.preventDefault();
-
-    const targetUrl = linkEl.href;
-    const settings = 'width=1,height=1,left=-1000,top=-1000';
-    const newWindow = window.open(targetUrl, '_blank', settings);
-    linkEl.innerHTML = 'Logging in...';
-    linkEl.classList.add('disabled');
-
-    if (!newWindow) {
-      return;
-    }
-
-    setTimeout(async () => {
-      newWindow.close();
-      const referenceNumber = linkEl.getAttribute(DATA_ATTR);
-      if (referenceNumber) {
-        console.log('[DEBUG] handleClick(): referenceNumber', referenceNumber);
-        const hasLogin = await checkLogin({ referenceNumber });
-        console.log('[DEBUG] handleClick: hasLogin', hasLogin);
-        if (hasLogin) {
-          linkEl.innerHTML = `You've logged in`;
-          linkEl.classList.add('disabled');
-        }
-      }
-    }, 500);
-  };
-
-  document.body.addEventListener('click', handleClick);
-};
-
-const run = async () => {
-  const url = window.location.href;
-  const isMatchUrl = !!(url.match(URI_REGEXP) || url.match(URI_REGEXP2));
-  if (isMatchUrl) {
-    render();
-    bind();
+  } finally {
+    const nextLinkEl = q(UNHANDLED_LINK_SELECTOR);
+    if (nextLinkEl) run(nextLinkEl as HTMLLinkElement);
   }
 };
 
 export const setJiraMissionControlLogin = () => {
-  window.addEventListener('popstate', run);
-  window.addEventListener('beforeunload', () => {
-    window.removeEventListener('popstate', run);
-  });
-  setTimeout(run, 1000);
+  chrome.runtime.onMessage.addListener(
+    async ({ type }, sender, sendResponse) => {
+      if (type === 'set-jira-mission-control-login') {
+        try {
+          const linkEl = await waitForElement(UNHANDLED_LINK_SELECTOR);
+          if (linkEl) run(linkEl as HTMLLinkElement);
+        } catch (e) {
+          if (e instanceof Error) {
+            console.error(e.message);
+          }
+        }
+      }
+    }
+  );
 };
