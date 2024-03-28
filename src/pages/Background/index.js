@@ -5,15 +5,16 @@ import './set-mission-control-credentials';
 import './set-payment-setup-autofill';
 import './set-signup-autofill';
 import './set-subscription-autofill';
+import './set-stripe-connect-autofill';
 
-import { getActiveTabUrl, getHostUrl } from '../Popup/utils';
+import {getActiveTabUrl, getHostUrl} from '../Popup/utils';
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-  const { type, value } = request;
+  const {type, value} = request;
   console.log('[DEBUG] Background onMessage', type, value);
 
   if (type === 'ACCESS_TOKEN' && value) {
-    chrome.storage.local.set({ accessToken: value });
+    chrome.storage.local.set({accessToken: value});
   }
 
   if (type === 'GET_CSRF_TOKEN' && value) {
@@ -24,7 +25,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     });
     if (cookie) {
       sendResponse(cookie.value);
-      chrome.storage.local.set({ csrfToken: cookie.value });
+      chrome.storage.local.set({csrfToken: cookie.value});
     }
   }
 });

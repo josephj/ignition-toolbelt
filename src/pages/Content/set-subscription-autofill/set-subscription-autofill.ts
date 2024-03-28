@@ -1,6 +1,8 @@
 import { simulateSelect, simulateType } from './util';
 import { faker } from '@faker-js/faker';
 
+faker.seed(1);
+
 const run = () => {
   console.log('[DEBUG] run()');
 
@@ -53,10 +55,10 @@ const runRecurly = () => {
   const expiryEl: HTMLInputElement | null = document.querySelector(
     '.recurly-hosted-field-input-expiry'
   );
-  if (expiryEl) simulateType(expiryEl, '1230');
+  if (expiryEl) simulateType(expiryEl, '12/30');
 
   const cvvEl: HTMLInputElement | null = document.querySelector(
-    '.recurly-hosted-field-input-number'
+    '.recurly-hosted-field-input-cvv'
   );
   if (cvvEl) simulateType(cvvEl, '123');
 };

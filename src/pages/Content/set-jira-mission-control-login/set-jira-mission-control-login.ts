@@ -4,7 +4,7 @@ import {
   checkPracticeLogin,
   getPracticeId,
 } from './utils';
-import { q, wait, waitForElement } from '../lib';
+import { q, wait } from '../lib';
 import { makeMissionControlRequest } from '../../../lib/graphql';
 
 const DATA_ATTR = 'data-ignition-practice-reference-number';
@@ -141,8 +141,10 @@ export const setJiraMissionControlLogin = () => {
     async ({ type }, sender, sendResponse) => {
       if (type === 'set-jira-mission-control-login') {
         try {
-          const linkEl = await waitForElement(UNHANDLED_LINK_SELECTOR);
-          if (linkEl) run(linkEl as HTMLLinkElement);
+          setTimeout(() => {
+            const linkEl = q(UNHANDLED_LINK_SELECTOR);
+            if (linkEl) run(linkEl as HTMLLinkElement);
+          }, 1000);
         } catch (e) {
           if (e instanceof Error) {
             console.error(e.message);

@@ -23,12 +23,12 @@ export const waitUntil = (
     }, duration);
   });
 
-export const waitForElement = (
+export const waitForElement = <T extends HTMLElement = HTMLElement>(
   selector: string,
   interval: number = 500,
   timeout: number = 10000
 ) => {
-  return new Promise<HTMLElement>((resolve, reject) => {
+  return new Promise<T | null>((resolve, reject) => {
     const startTime = Date.now();
     const containsRegex = /:contains\((.*?)\)/;
 
@@ -44,7 +44,7 @@ export const waitForElement = (
 
     const intervalId = setInterval(() => {
       const elapsedTime = Date.now() - startTime;
-      const elements = document.querySelectorAll<HTMLElement>(selector);
+      const elements = document.querySelectorAll<T>(selector);
       const element = containsText
         ? Array.from(elements).find((el) =>
             el?.textContent?.includes(containsText)
@@ -56,7 +56,7 @@ export const waitForElement = (
         resolve(element);
       } else if (elapsedTime >= timeout) {
         clearInterval(intervalId);
-        reject(new Error('waitForElement timeout'));
+        resolve(null);
       }
     }, interval);
   });

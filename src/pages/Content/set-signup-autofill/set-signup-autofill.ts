@@ -1,6 +1,8 @@
 import { simulateClick, simulateSelect, simulateType } from './util';
 import { faker } from '@faker-js/faker';
 
+faker.seed(1);
+
 const run = (url: string) => {
   const { pathname } = new URL(url);
   switch (pathname) {

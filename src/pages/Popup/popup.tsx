@@ -60,9 +60,9 @@ export const Popup = () => {
     return <Launch />;
   }
 
-  if (!token) {
-    return <Login onSignIn={handleSignIn} />;
-  }
+  // if (!token) {
+  //   return <Login onSignIn={handleSignIn} />;
+  // }
 
   if (!apolloClient) {
     return null;

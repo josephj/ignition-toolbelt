@@ -25,14 +25,16 @@
         "https://api.recurly.com/js/v1/field.html",
         "https://ignitionapp.atlassian.net/browse/*",
         "https://ignitionapp.atlassian.net/jira/servicedesk/projects/HELP/*",
-        "https://connect.stripe.com/setup/*"
+        "https://connect.stripe.com/setup/*",
+        "https://connect-js.stripe.com/*"
       ],
       "js": [
         "contentScript.bundle.js"
       ],
       "css": [
         "content.styles.css"
-      ]
+      ],
+      "all_frames": true
     }
   ],
   "permissions": [

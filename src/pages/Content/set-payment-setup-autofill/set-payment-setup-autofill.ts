@@ -8,11 +8,13 @@ const BANK_ROUTING_NUMBER_SELECTOR = 'input[placeholder="Routing Number"]';
 const BANK_BSB_NUMBER_SELECTOR = 'input[placeholder="BSB"]';
 const BANK_ACCOUNT_NUMBER_SELECTOR = 'input[placeholder="Account Number"]';
 
-const run = async (url: string) => {
-  const nextButton = await waitForElement(NEXT_BUTTON_SELECTOR);
-  simulateClick(nextButton);
+faker.seed(1);
 
-  const submitButton = await waitForElement(SUBMIT_BUTTON_SELECTOR);
+const run = async () => {
+  const nextButton = await waitForElement(NEXT_BUTTON_SELECTOR);
+  if (nextButton) {
+    simulateClick(nextButton);
+  }
 
   const bankAccountName = q<HTMLInputElement>(BANK_ACCOUNT_NAME_SELECTOR);
   if (bankAccountName)
@@ -27,7 +29,10 @@ const run = async (url: string) => {
   const bankAccountNumber = q<HTMLInputElement>(BANK_ACCOUNT_NUMBER_SELECTOR);
   if (bankAccountNumber) simulateType(bankAccountNumber, '000123456');
 
-  simulateClick(submitButton);
+  const submitButton = await waitForElement(SUBMIT_BUTTON_SELECTOR);
+  if (submitButton) {
+    simulateClick(submitButton);
+  }
 };
 
 export const setPaymentSetupAutofill = () => {
@@ -38,12 +43,8 @@ export const setPaymentSetupAutofill = () => {
           const isPaymentDisabled =
             !q('[data-testid="ignt-auto-payment-settings"]') &&
             !q('a:contains(Subscribe to a plan)');
-          console.log(
-            '=>(set-payment-setup-autofill.ts:42) isPaymentDisabled',
-            isPaymentDisabled
-          );
           if (isPaymentDisabled) {
-            run(value);
+            run();
           }
         }, 1000);
       }
