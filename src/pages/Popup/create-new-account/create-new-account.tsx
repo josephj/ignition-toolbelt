@@ -1,89 +1,10 @@
 import React from 'react';
-import { Button, Stack, useBoolean } from '@chakra-ui/react';
-import { gql } from '@apollo/client';
+import { Button, useBoolean, Stack } from '@chakra-ui/react';
 import { devClient, signIn, createBasePractice } from './util';
+import MUTATION_CREATE_STANDARD_ACCOUNT from './mutation.seedStandardPractice.graphql';
+import MUTATION_CREATE_ACCOUNT_WITH_PAYMENTS from './mutation.seedWithPayments.graphql';
 
-const MUTATION_CREATE_STANDARD_ACCOUNT = gql`
-  mutation seedStandardPractice($practiceId: ID!) {
-    seedStandardPractice(input: { practiceId: $practiceId }) {
-      practice {
-        id
-        name
-        principal {
-          email
-        }
-      }
-    }
-  }
-`;
-
-const MUTATION_CREATE_ACCOUNT_WITH_PAYMENTS = gql`
-  mutation seedPracticeWithPayments {
-    seedPracticeWithPayments(input: {}) {
-      practice {
-        id
-        name
-        principal {
-          email
-        }
-      }
-    }
-  }
-`;
-
-const MUTATION_CREATE_ACCOUNT_WITH_XERO = gql`
-  mutation seedStandardPractice($practiceId: ID!) {
-    seedStandardPractice(
-      input: { practiceId: $practiceId, integrations: ["xero"] }
-    ) {
-      practice {
-        id
-        name
-        principal {
-          email
-        }
-      }
-    }
-  }
-`;
-
-const MUTATION_CREATE_ACCOUNT_WITH_QBO = gql`
-  mutation seedStandardPractice($practiceId: ID!) {
-    seedStandardPractice(
-      input: { practiceId: $practiceId, integrations: ["qbo"] }
-    ) {
-      practice {
-        id
-        name
-        principal {
-          email
-        }
-      }
-    }
-  }
-`;
-
-const MUTATION_CREATE_ACCOUNT_WITH_DRAFT_PROPOSAL = gql`
-  mutation seedStandardPractice($practiceId: ID!) {
-    seedStandardPractice(
-      input: { practiceId: $practiceId, proposalsTraits: ["draft"] }
-    ) {
-      practice {
-        id
-        name
-        principal {
-          email
-        }
-      }
-    }
-  }
-`;
-
-type Props = {
-  onSignIn(token: string): void;
-};
-
-export const CreateNewAccount = ({ onSignIn }: Props) => {
+export const CreateNewAccount = () => {
   const [isProcessing, setProcessing] = useBoolean(false);
 
   const handleCreateAccountPayment = async () => {
@@ -92,9 +13,8 @@ export const CreateNewAccount = ({ onSignIn }: Props) => {
       mutation: MUTATION_CREATE_ACCOUNT_WITH_PAYMENTS,
     });
     const { email } = data.seedPracticeWithPayments.practice.principal;
-    const { accessToken } = await signIn({ email });
-    onSignIn(accessToken);
-    chrome.tabs.update({ url: 'http://localhost:3000/settings/payments' });
+    await signIn({ email });
+    window.location.href = '/settings/payments';
     setProcessing.off();
   };
 
@@ -104,12 +24,11 @@ export const CreateNewAccount = ({ onSignIn }: Props) => {
       name: 'Account with Quickbook',
     });
     await devClient.mutate({
-      mutation: MUTATION_CREATE_ACCOUNT_WITH_QBO,
-      variables: { practiceId },
+      mutation: MUTATION_CREATE_STANDARD_ACCOUNT,
+      variables: { practiceId, integrations: ['qbo'] },
     });
-    const { accessToken } = await signIn({ email });
-    onSignIn(accessToken);
-    chrome.tabs.update({ url: 'http://localhost:3000/apps' });
+    await signIn({ email });
+    window.location.href = '/apps';
     setProcessing.off();
   };
 
@@ -119,12 +38,11 @@ export const CreateNewAccount = ({ onSignIn }: Props) => {
       name: 'Account with Xero',
     });
     await devClient.mutate({
-      mutation: MUTATION_CREATE_ACCOUNT_WITH_XERO,
-      variables: { practiceId },
+      mutation: MUTATION_CREATE_STANDARD_ACCOUNT,
+      variables: { practiceId, integrations: ['xero'] },
     });
-    const { accessToken } = await signIn({ email });
-    onSignIn(accessToken);
-    chrome.tabs.update({ url: 'http://localhost:3000/apps' });
+    await signIn({ email });
+    window.location.href = '/apps';
     setProcessing.off();
   };
 
@@ -134,14 +52,11 @@ export const CreateNewAccount = ({ onSignIn }: Props) => {
       name: 'Proposal Hacker',
     });
     await devClient.mutate({
-      mutation: MUTATION_CREATE_ACCOUNT_WITH_DRAFT_PROPOSAL,
-      variables: { practiceId },
+      mutation: MUTATION_CREATE_STANDARD_ACCOUNT,
+      variables: { practiceId, proposalsTraits: ['draft'] },
     });
-    const { accessToken } = await signIn({ email });
-    onSignIn(accessToken);
-    chrome.tabs.update({
-      url: 'http://localhost:3000/pipeline?page=1&status=DRAFT',
-    });
+    await signIn({ email });
+    window.location.href = '/pipeline?page=1&status=DRAFT';
     setProcessing.off();
   };
 
@@ -154,9 +69,8 @@ export const CreateNewAccount = ({ onSignIn }: Props) => {
       mutation: MUTATION_CREATE_STANDARD_ACCOUNT,
       variables: { practiceId },
     });
-    const { accessToken } = await signIn({ email });
-    onSignIn(accessToken);
-    chrome.tabs.update({ url: 'http://localhost:3000/dashboard' });
+    await signIn({ email });
+    window.location.href = '/dashboard';
     setProcessing.off();
   };
 
@@ -166,7 +80,6 @@ export const CreateNewAccount = ({ onSignIn }: Props) => {
         colorScheme="purple"
         onClick={handleCreateAccountStandard}
         isLoading={isProcessing}
-        size="xs"
       >
         Create Standard Account
       </Button>
@@ -174,7 +87,6 @@ export const CreateNewAccount = ({ onSignIn }: Props) => {
         colorScheme="purple"
         onClick={handleCreateAccountPayment}
         isLoading={isProcessing}
-        size="xs"
       >
         Account With Payments
       </Button>
@@ -182,7 +94,6 @@ export const CreateNewAccount = ({ onSignIn }: Props) => {
         colorScheme="purple"
         onClick={handleCreateAccountQuickBooks}
         isLoading={isProcessing}
-        size="xs"
       >
         Account With Qbo Integration
       </Button>
@@ -190,7 +101,6 @@ export const CreateNewAccount = ({ onSignIn }: Props) => {
         colorScheme="purple"
         onClick={handleCreateAccountXero}
         isLoading={isProcessing}
-        size="xs"
       >
         Account With Xero Integration
       </Button>
@@ -198,7 +108,6 @@ export const CreateNewAccount = ({ onSignIn }: Props) => {
         colorScheme="purple"
         onClick={handleCreateAccountDraftProposal}
         isLoading={isProcessing}
-        size="xs"
       >
         Account With Draft Proposal
       </Button>

@@ -1,100 +1,97 @@
 import { simulateClick, simulateSelect, simulateType } from './util';
 import { faker } from '@faker-js/faker';
+import { q, waitForElement } from '../lib';
 
-faker.seed(1);
+faker.seed(2);
 
-const run = (url: string) => {
+const run = async (url: string, shouldClickNext = false) => {
   const { pathname } = new URL(url);
   switch (pathname) {
     case '/sign-up/sso': {
-      const submitButtonEl: HTMLButtonElement | null = document.querySelector(
+      const submitButtonEl = await waitForElement<HTMLButtonElement>(
         '[data-testid="sign-up-email-button"]'
       );
-      if (submitButtonEl) {
+      if (shouldClickNext && submitButtonEl) {
         simulateClick(submitButtonEl);
       }
       break;
     }
+
     case '/sign-up/email': {
-      const emailEl: HTMLInputElement | null = document.querySelector(
+      const emailEl = await waitForElement<HTMLInputElement>(
         'input[name="email"]'
       );
       if (emailEl) {
         simulateType(emailEl, faker.internet.email());
       }
-      const passwordEl: HTMLInputElement | null = document.querySelector(
-        'input[name="password"]'
-      );
+      const passwordEl = q<HTMLInputElement>('input[name="password"]');
       if (passwordEl) {
         simulateType(passwordEl, faker.internet.password());
       }
-      const submitButtonEl: HTMLButtonElement | null = document.querySelector(
+      const submitButtonEl = q<HTMLButtonElement>(
         '[data-testid="submit-button"]'
       );
-      if (submitButtonEl) {
+      if (shouldClickNext && submitButtonEl) {
         simulateClick(submitButtonEl);
       }
       break;
     }
+
     case '/welcome': {
-      const notSureButton = document.querySelector('button');
-      if (notSureButton && notSureButton.innerText === `I'm not sure`) {
+      const notSureButton = await waitForElement<HTMLButtonElement>(
+        'button:contains("not sure")'
+      );
+      console.log('=>(set-signup-autofill.ts:44) notSureButton', notSureButton);
+      if (notSureButton) {
         simulateClick(notSureButton);
       }
       break;
     }
+
     case '/welcome/about': {
-      const fullNameEl: HTMLInputElement | null = document.querySelector(
+      const fullNameEl = await waitForElement<HTMLInputElement>(
         'input[name="fullName"]'
       );
       if (fullNameEl) simulateType(fullNameEl, faker.person.fullName());
 
-      const companyNameEl: HTMLInputElement | null = document.querySelector(
-        'input[name="companyName"]'
-      );
+      const companyNameEl = q<HTMLInputElement>('input[name="companyName"]');
       if (companyNameEl) simulateType(companyNameEl, faker.company.name());
 
-      const phoneNumberEl: HTMLInputElement | null = document.querySelector(
-        'input[name="phoneNumber"]'
-      );
+      const phoneNumberEl = q<HTMLInputElement>('input[name="phoneNumber"]');
       if (phoneNumberEl) simulateType(phoneNumberEl, faker.phone.number());
 
       simulateSelect('.countrySelect', 'Australia');
 
-      const referralMethodEl: HTMLInputElement | null = document.querySelector(
+      const referralMethodEl = q<HTMLInputElement>(
         'input[name="referralMethod"]'
       );
       if (referralMethodEl) simulateType(referralMethodEl, 'Google');
 
-      const nextButtonEl: HTMLButtonElement | null = document.querySelector(
-        '[data-testid="next-button"]'
-      );
-      if (nextButtonEl) simulateClick(nextButtonEl);
+      const nextButtonEl = q<HTMLButtonElement>('[data-testid="next-button"]');
+      if (shouldClickNext && nextButtonEl) simulateClick(nextButtonEl);
       break;
     }
+
     case '/welcome/questions': {
+      await waitForElement<HTMLParagraphElement>(
+        'p:contains("Tell us about your business")'
+      );
       simulateSelect('.industry', 'Accounting');
       simulateSelect('.revenueBracket', '$0-$200K');
       simulateSelect('.ledger', 'Xero');
       simulateSelect('.clientsCount', '2000+ clients');
 
-      const nextButtonEl: HTMLButtonElement | null = document.querySelector(
-        '[data-testid="next-button"]'
-      );
-      if (nextButtonEl) simulateClick(nextButtonEl);
+      const nextButtonEl = q<HTMLButtonElement>('[data-testid="next-button"]');
+      if (shouldClickNext && nextButtonEl) simulateClick(nextButtonEl);
       break;
     }
   }
 };
 
 export const setSignupAutofill = () => {
-  chrome.runtime.onMessage.addListener(
-    ({ type, value }, sender, sendResponse) => {
-      if (type === 'set-signup-autofill') {
-        setTimeout(() => {
-          run(value);
-        }, 1000);
-      }
+  chrome.runtime.onMessage.addListener(({ type, value }) => {
+    if (type === 'set-signup-autofill') {
+      run(value);
     }
-  );
+  });
 };

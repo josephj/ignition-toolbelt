@@ -1,0 +1,21 @@
+mutation seedStandardPractice(
+  $practiceId: ID!
+  $integrations: [String!]
+  $proposalsTraits: [String!]
+) {
+  seedStandardPractice(
+    input: {
+      practiceId: $practiceId
+      integrations: $integrations
+      proposalsTraits: $proposalsTraits
+    }
+  ) {
+    practice {
+      id
+      name
+      principal {
+        email
+      }
+    }
+  }
+}

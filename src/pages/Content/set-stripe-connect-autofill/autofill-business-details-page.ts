@@ -17,11 +17,9 @@ function generateFakeABN(faker: Faker) {
 
 export const autofillBusinessDetailsPage = async (
   faker: Faker,
-  shouldClickNext: boolean = true
+  shouldClickNext: boolean = false
 ) => {
-  const companyName = await waitForElement<HTMLInputElement>(
-    'input[name="company[name]"]'
-  );
+  const companyName = q<HTMLInputElement>('input[name="company[name]"]');
   if (companyName) {
     simulateType(companyName, faker.company.name());
   }

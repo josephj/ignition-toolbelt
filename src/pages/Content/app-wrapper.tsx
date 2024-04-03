@@ -5,17 +5,26 @@ import { ChakraProvider } from '@chakra-ui/react';
 
 const hostUrl = getHostUrl(window.location.href);
 
-const apolloClient = new ApolloClient({
-  uri: `${hostUrl}/graphql`,
-  cache: new InMemoryCache(),
-  headers: {
-    'X-CSRF-Token': 'csrf',
-  },
-  credentials: 'include',
-});
+const createApolloClient = (csrfToken: string) =>
+  new ApolloClient({
+    uri: `${hostUrl}/graphql`,
+    cache: new InMemoryCache(),
+    headers: {
+      'X-CSRF-Token': csrfToken,
+    },
+    credentials: 'include',
+  });
 
-export const AppWrapper = ({ children }: { children: React.ReactNode }) => (
+export const AppWrapper = ({
+  csrfToken,
+  children,
+}: {
+  csrfToken: string;
+  children: React.ReactNode;
+}) => (
   <ChakraProvider>
-    <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
+    <ApolloProvider client={createApolloClient(csrfToken)}>
+      {children}
+    </ApolloProvider>
   </ChakraProvider>
 );

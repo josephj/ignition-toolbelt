@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { q, simulateClick, simulateType, waitForElement } from '../lib';
+import 'arrive';
 
 const NEXT_BUTTON_SELECTOR = 'button[type="button"]:contains("Next")';
 const SUBMIT_BUTTON_SELECTOR = 'button[type="button"]:contains("Submit")';
@@ -8,15 +9,12 @@ const BANK_ROUTING_NUMBER_SELECTOR = 'input[placeholder="Routing Number"]';
 const BANK_BSB_NUMBER_SELECTOR = 'input[placeholder="BSB"]';
 const BANK_ACCOUNT_NUMBER_SELECTOR = 'input[placeholder="Account Number"]';
 
-faker.seed(1);
+faker.seed(2);
 
-const run = async () => {
-  const nextButton = await waitForElement(NEXT_BUTTON_SELECTOR);
-  if (nextButton) {
-    simulateClick(nextButton);
-  }
-
-  const bankAccountName = q<HTMLInputElement>(BANK_ACCOUNT_NAME_SELECTOR);
+const run = async (shouldClickNext = false) => {
+  const bankAccountName = await waitForElement<HTMLInputElement>(
+    BANK_ACCOUNT_NAME_SELECTOR
+  );
   if (bankAccountName)
     simulateType(bankAccountName, faker.finance.accountName());
 
@@ -30,24 +28,18 @@ const run = async () => {
   if (bankAccountNumber) simulateType(bankAccountNumber, '000123456');
 
   const submitButton = await waitForElement(SUBMIT_BUTTON_SELECTOR);
-  if (submitButton) {
+  if (shouldClickNext && submitButton) {
     simulateClick(submitButton);
   }
 };
 
 export const setPaymentSetupAutofill = () => {
-  chrome.runtime.onMessage.addListener(
-    ({ type, value }, sender, sendResponse) => {
-      if (type === 'set-payment-setup-autofill') {
-        setTimeout(() => {
-          const isPaymentDisabled =
-            !q('[data-testid="ignt-auto-payment-settings"]') &&
-            !q('a:contains(Subscribe to a plan)');
-          if (isPaymentDisabled) {
-            run();
-          }
-        }, 1000);
-      }
+  chrome.runtime.onMessage.addListener(({ type }, sender, sendResponse) => {
+    if (type !== 'set-payment-setup-autofill') {
+      return;
     }
-  );
+
+    // @ts-ignore
+    document.arrive('.pie-auto-name-on-bank-account', run);
+  });
 };

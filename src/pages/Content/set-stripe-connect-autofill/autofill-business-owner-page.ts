@@ -1,23 +1,11 @@
 import type { Faker } from '@faker-js/faker';
-import {
-  q,
-  simulateClick,
-  simulateSelect,
-  simulateType,
-  waitForElement,
-} from '../lib';
-
-// https://demo.ignitionapp.com/console/practice/prac_mya4frn7oz5aaoaasw4q
-// https://connect.stripe.com/setup/c/acct_1Oz1kePMyXRb2sTV/2t2lkWIp5lgk
-// Gutman Group
+import { q, simulateClick, simulateSelect, simulateType } from '../lib';
 
 export const autofillBusinessOwnerPage = async (
   faker: Faker,
-  shouldClickNext: boolean = true
+  shouldClickNext: boolean = false
 ) => {
-  const legalFirstName = await waitForElement<HTMLInputElement>(
-    'input[name="first_name"]'
-  );
+  const legalFirstName = q<HTMLInputElement>('input[name="first_name"]');
   const legalLastName = q<HTMLInputElement>('input[name="last_name"]');
   if (legalFirstName && legalLastName) {
     simulateType(legalFirstName, faker.person.firstName());

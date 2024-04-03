@@ -10,7 +10,7 @@ import {
 import { Launch } from './launch';
 import { AppStatus } from './app-status';
 import { PopupContent } from './popup-content';
-import { Login } from './login';
+// import { Login } from './login';
 
 export const Popup = () => {
   const [token, setToken] = useState<string>();

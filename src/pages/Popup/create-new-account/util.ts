@@ -1,54 +1,21 @@
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+import MUTATION_CREATE_BASE_ACCOUNT from './mutation.createPractice.graphql';
+import MUTATION_USER_LOGIN from './mutation.userLogin.graphql';
 
 export const authClient = new ApolloClient({
-  uri: 'http://localhost:3000/auth-api/graphql',
+  uri: '/auth-api/graphql',
   cache: new InMemoryCache(),
 });
 
 export const devClient = new ApolloClient({
-  uri: 'http://localhost:3000/dev_api/graphql',
+  uri: '/dev_api/graphql',
   cache: new InMemoryCache(),
 });
-
-const MUTATION_CREATE_BASE_ACCOUNT = gql`
-  mutation createPractice($name: String!) {
-    createPractice(input: { name: $name }) {
-      practice {
-        id
-        name
-        principal {
-          email
-        }
-      }
-    }
-  }
-`;
-
-const MUTATION_USER_LOGIN = gql`
-  mutation userLogin($email: EmailAddress!) {
-    userLogin(
-      input: { email: $email, password: "correct horse battery staple" }
-    ) {
-      accessToken
-      oneTimePasswordRequired
-      mfaInfo {
-        id
-        enabled
-        readyForSetup
-        setupSkippable
-        setupRequiredFrom
-        sources {
-          deliveryMethod
-        }
-      }
-    }
-  }
-`;
 
 export const createBasePractice = async ({ name = 'Hacker' } = {}) => {
   const { data } = await devClient.mutate({
     mutation: MUTATION_CREATE_BASE_ACCOUNT,
-    variables: { name },
+    variables: { name, subscriptionStatus: 'subscribed_professional' },
   });
 
   const {
@@ -64,12 +31,6 @@ export const signIn = async ({ email }: { email: string }) => {
     mutation: MUTATION_USER_LOGIN,
     variables: { email },
   });
-
-  const { accessToken } = data?.userLogin || {};
-
-  window.localStorage.setItem('accessToken', accessToken);
-  window.localStorage.setItem('email', email);
-  window.localStorage.setItem('password', 'correct horse battery staple');
 
   return data?.userLogin;
 };

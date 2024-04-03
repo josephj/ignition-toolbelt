@@ -1,0 +1,18 @@
+mutation userLogin($email: EmailAddress!) {
+  userLogin(
+    input: { email: $email, password: "correct horse battery staple" }
+  ) {
+    accessToken
+    oneTimePasswordRequired
+    mfaInfo {
+      id
+      enabled
+      readyForSetup
+      setupSkippable
+      setupRequiredFrom
+      sources {
+        deliveryMethod
+      }
+    }
+  }
+}

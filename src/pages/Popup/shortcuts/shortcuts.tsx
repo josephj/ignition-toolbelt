@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useCurrentPracticeQuery } from '../../../generated/hooks';
 import { Button, HStack } from '@chakra-ui/react';
-import { getActiveTabUrl, getHostUrl } from '../utils';
-import { openTab } from './utils';
 
 export const Shortcuts = () => {
   const { data, loading } = useCurrentPracticeQuery();
   const [hostUrl, setHostUrl] = useState<string | null>();
 
   useEffect(() => {
-    getActiveTabUrl().then((tabUrl) => {
-      const url = getHostUrl(tabUrl);
-      setHostUrl(url);
-    });
+    const urlScheme = new URL(window.location.href);
+    const url = `${urlScheme.protocol}//${urlScheme.host}`;
+    setHostUrl(url);
   }, []);
 
   if (loading || !data) {
@@ -21,35 +18,49 @@ export const Shortcuts = () => {
 
   const { currentPractice } = data;
 
-  const handleClickApp = (event: React.MouseEvent) => {
+  const handleClickApp = () => {
     if (hostUrl) {
-      openTab(hostUrl, event.metaKey);
+      window.open(hostUrl);
     }
   };
 
   const handleClickMissionControl = (event: React.MouseEvent) => {
     const url = `${hostUrl}/console/practice/${currentPractice?.id}`;
-    if (url) {
-      openTab(url, event.metaKey);
+    if (!url) {
+      return;
     }
+
+    if (event.metaKey) {
+      window.open(url);
+      return;
+    }
+
+    window.location.href = url;
   };
 
   const handleClickGraphiql = (event: React.MouseEvent) => {
     const url = `${hostUrl}/graphiql`;
-    if (url) {
-      openTab(url, event.metaKey);
+    if (!url) {
+      return;
     }
+
+    if (event.metaKey) {
+      window.open(url);
+      return;
+    }
+
+    window.location.href = url;
   };
 
   return (
     <HStack>
-      <Button onClick={handleClickApp} colorScheme="blue" size="sm">
+      <Button onClick={handleClickApp} colorScheme="blue">
         App
       </Button>
-      <Button onClick={handleClickGraphiql} colorScheme="blue" size="sm">
+      <Button onClick={handleClickGraphiql} colorScheme="blue">
         GraphiQL
       </Button>
-      <Button onClick={handleClickMissionControl} colorScheme="blue" size="sm">
+      <Button onClick={handleClickMissionControl} colorScheme="blue">
         Mission Control
       </Button>
     </HStack>

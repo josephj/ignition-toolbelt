@@ -1,0 +1,13 @@
+mutation createPractice($name: String!, $subscriptionStatus: String) {
+  createPractice(
+    input: { name: $name, subscriptionStatus: $subscriptionStatus }
+  ) {
+    practice {
+      id
+      name
+      principal {
+        email
+      }
+    }
+  }
+}

@@ -6680,6 +6680,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"arrive@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "arrive@npm:2.4.1"
+  checksum: 6a1606b9b9d55b599e28ec24cf787ef784f3157d59f6118f821aec63f285f9c54bc1ff3ff332031d3593f67e4c6ca072ffc82d1fd0c1c15a13929449f467a98a
+  languageName: node
+  linkType: hard
+
 "asap@npm:~2.0.3":
   version: 2.0.6
   resolution: "asap@npm:2.0.6"
@@ -10657,6 +10664,7 @@ __metadata:
     "@types/chrome": ^0.0.202
     "@types/react": ^18.0.26
     "@types/react-dom": ^18.0.10
+    arrive: ^2.4.1
     babel-eslint: ^10.1.0
     babel-loader: ^9.1.2
     babel-preset-react-app: ^10.0.1
@@ -10676,6 +10684,7 @@ __metadata:
     fs-extra: ^11.1.0
     graphql: ^16.7.1
     graphql-cli: ^4.1.0
+    graphql-tag: ^2.12.6
     html-loader: ^4.2.0
     html-webpack-plugin: ^5.5.0
     prettier: ^2.8.3

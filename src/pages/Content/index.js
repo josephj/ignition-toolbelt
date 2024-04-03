@@ -8,7 +8,7 @@ import { setComicSans } from './set-comics-sans';
 import { setMissionControlRedirect } from './set-mission-control-redirect';
 import { setNpeExit } from './set-npe-exit';
 import { setGithubTicketAutolink } from './set-github-ticket-autolink';
-import { setJiraMissionControlLogin } from './set-jira-mission-control-login/set-jira-mission-control-login';
+import { setJiraMissionControlLogin } from './set-jira-mission-control-login';
 import {
   COMIC_SANS,
   MISSION_CONTROL_REDIRECT,
@@ -40,19 +40,21 @@ chrome.runtime.onMessage.addListener(async (request) => {
   if (type === MISSION_CONTROL_REDIRECT) await setMissionControlRedirect(value);
 });
 
-(() => {
-  const url = window.location.href;
-  const isWidgetAvailable = checkAvailability(url);
-  if (!isWidgetAvailable) return;
+chrome.runtime.onMessage.addListener(async ({ type, value }) => {
+  if (type === 'set-current-tab-credentials') {
+    const url = window.location.href;
+    const isWidgetAvailable = checkAvailability(url);
+    if (!isWidgetAvailable) return;
 
-  let rootEl = document.getElementById('ignition-toolbelt-app');
-  if (!rootEl) {
-    rootEl = document.createElement('div');
-    if (document.body) {
-      document.body.appendChild(rootEl);
+    let rootEl = document.getElementById('ignition-toolbelt-app');
+    if (!rootEl) {
+      rootEl = document.createElement('div');
+      if (document.body) {
+        document.body.appendChild(rootEl);
+      }
     }
-  }
 
-  const root = createRoot(rootEl);
-  root.render(<App />);
-})();
+    const root = createRoot(rootEl);
+    root.render(<App csrfToken={value} />);
+  }
+});

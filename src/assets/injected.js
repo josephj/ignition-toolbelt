@@ -14,8 +14,6 @@
 
       window.postMessage({ type: 'ACCESS_TOKEN', accessToken }, '*');
 
-      window.location.href = '/';
-
       return originalFetch(resource, config);
     }
     return originalFetch(resource, config);

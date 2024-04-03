@@ -1,13 +1,15 @@
 import { simulateSelect, simulateType } from './util';
 import { faker } from '@faker-js/faker';
+import { waitForElement } from '../lib';
 
-faker.seed(1);
+faker.seed(2);
 
-const run = () => {
+const run = async () => {
   console.log('[DEBUG] run()');
 
-  const firstNameEl: HTMLInputElement | null =
-    document.querySelector('[name="firstName"]');
+  const firstNameEl = await waitForElement<HTMLInputElement>(
+    '[name="firstName"]'
+  );
   if (firstNameEl) simulateType(firstNameEl, faker.person.firstName());
 
   const lastNameEl: HTMLInputElement | null =
@@ -44,10 +46,10 @@ const run = () => {
   simulateSelect('.chakra-form-control:last-of-type', 'Australia');
 };
 
-const runRecurly = () => {
+const runRecurly = async () => {
   console.log('[DEBUG] runRecurly()');
 
-  const numberEl: HTMLInputElement | null = document.querySelector(
+  const numberEl = await waitForElement<HTMLInputElement>(
     '.recurly-hosted-field-input-number'
   );
   if (numberEl) simulateType(numberEl, '4111111111111111');
@@ -64,12 +66,10 @@ const runRecurly = () => {
 };
 
 export const setSubscriptionAutofill = () => {
-  chrome.runtime.onMessage.addListener(
-    ({ type, value }, sender, sendResponse) => {
-      if (type === 'set-subscription-autofill') {
-        const isRecurly = value.includes('api.recurly.com');
-        setTimeout(isRecurly ? runRecurly : run, 2000);
-      }
+  chrome.runtime.onMessage.addListener(({ type, value }) => {
+    if (type === 'set-subscription-autofill') {
+      const isRecurly = value.includes('api.recurly.com');
+      isRecurly ? runRecurly() : run();
     }
-  );
+  });
 };

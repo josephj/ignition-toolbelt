@@ -3,18 +3,18 @@ import { simulateClick, simulateType, waitForElement } from '../lib';
 import { autofillAboutBusinessPage } from './autofill-about-business-page';
 import { autofillBusinessDetailsPage } from './autofill-business-details-page';
 import { autofillBusinessOwnerPage } from './autofill-business-owner-page';
+import 'arrive';
 
 const faker = new Faker({ locale: 'en_AU', locales: { ...allLocales } });
 
-faker.seed(1);
-
-// https://connect.stripe.com/setup/c/acct_1OyIRoPQQJ1tg5yE/oOzrpeF8X8Jd
+faker.seed(2);
 
 const run = async (shouldClickNext = true) => {
   const heading = await waitForElement('h1');
   if (!heading || !heading.textContent) return;
 
-  switch (heading.textContent) {
+  const title = heading.textContent;
+  switch (title) {
     case 'About your business':
       await autofillAboutBusinessPage(shouldClickNext);
       return;
@@ -25,7 +25,7 @@ const run = async (shouldClickNext = true) => {
       await autofillBusinessOwnerPage(faker, shouldClickNext);
       return;
     default:
-      if (heading.textContent.includes('ID verification for ')) {
+      if (title.includes('ID verification for ')) {
         const button = await waitForElement(
           'a[data-test="test-mode-fill-button"]'
         );
@@ -34,7 +34,7 @@ const run = async (shouldClickNext = true) => {
         }
       }
 
-      if (heading.textContent.includes('Review and submit')) {
+      if (shouldClickNext && title.includes('Review and submit')) {
         const button = await waitForElement(
           'a[data-testid="requirements-index-done-button"]'
         );
@@ -42,34 +42,39 @@ const run = async (shouldClickNext = true) => {
           simulateClick(button);
         }
       }
-      return;
   }
 };
 
 export const setStripeConnectAutofill = () => {
-  chrome.runtime.onMessage.addListener(
-    async ({ type, value }, sender, sendResponse) => {
-      if (type === 'set-stripe-connect-autofill') {
-        if (value === 'main') {
-          run();
-        } else {
-          const searchInput = await waitForElement<HTMLInputElement>(
-            '[data-testid="searchable-select-input"]'
-          );
+  chrome.runtime.onMessage.addListener(async ({ type, value }) => {
+    if (type !== 'set-stripe-connect-autofill') {
+      return;
+    }
 
-          if (searchInput) {
-            simulateType(searchInput, 'Accountant');
-            const keydownEvent = new KeyboardEvent('keydown', {
-              bubbles: true,
-              cancelable: true,
-              key: 'Enter',
-              code: 'Enter',
-              keyCode: 13,
-            });
-            searchInput.dispatchEvent(keydownEvent);
-          }
-        }
+    if (value === 'main') {
+      // @ts-ignore
+      document.arrive(
+        'div[data-testid="account-onboarding-container"] h1',
+        run
+      );
+    }
+
+    if (value === 'accessory') {
+      const searchInput = await waitForElement<HTMLInputElement>(
+        '[data-testid="searchable-select-input"]'
+      );
+
+      if (searchInput) {
+        simulateType(searchInput, 'Accountant');
+        const keydownEvent = new KeyboardEvent('keydown', {
+          bubbles: true,
+          cancelable: true,
+          key: 'Enter',
+          code: 'Enter',
+          keyCode: 13,
+        });
+        searchInput.dispatchEvent(keydownEvent);
       }
     }
-  );
+  });
 };

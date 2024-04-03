@@ -1,0 +1,11 @@
+mutation seedPracticeWithPayments {
+  seedPracticeWithPayments(input: {}) {
+    practice {
+      id
+      name
+      principal {
+        email
+      }
+    }
+  }
+}
