@@ -33,17 +33,27 @@ window.addEventListener('load', async () => {
   await setStripeConnectAutofill();
 });
 
-chrome.runtime.onMessage.addListener(async (request) => {
-  const { type, value } = request;
-  if (type === COMIC_SANS) await setComicSans(value);
-  if (type === NPE_EXIT) await setNpeExit(value);
-  if (type === MISSION_CONTROL_REDIRECT) await setMissionControlRedirect(value);
+const WIDGET_EXCLUDED_PATHS = ['/sign-in', '/sign-up', '/console'];
+
+chrome.storage.local.onChanged.addListener(async (changes) => {
+  const keys = Object.keys(changes);
+  keys.forEach((key) => {
+    const { newValue } = changes[key];
+    if (key === COMIC_SANS) setComicSans(newValue);
+    if (key === NPE_EXIT) setNpeExit(newValue);
+    if (key === MISSION_CONTROL_REDIRECT) setMissionControlRedirect(newValue);
+  });
 });
 
 chrome.runtime.onMessage.addListener(async ({ type, value }) => {
   if (type === 'set-current-tab-credentials') {
     const url = window.location.href;
-    const isWidgetAvailable = checkAvailability(url);
+    const urlScheme = new URL(url);
+
+    const isWidgetAvailable =
+      checkAvailability(url) &&
+      !WIDGET_EXCLUDED_PATHS.some((path) => urlScheme.pathname.includes(path));
+
     if (!isWidgetAvailable) return;
 
     let rootEl = document.getElementById('ignition-toolbelt-app');
@@ -52,9 +62,8 @@ chrome.runtime.onMessage.addListener(async ({ type, value }) => {
       if (document.body) {
         document.body.appendChild(rootEl);
       }
+      const root = createRoot(rootEl);
+      root.render(<App csrfToken={value} />);
     }
-
-    const root = createRoot(rootEl);
-    root.render(<App csrfToken={value} />);
   }
 });

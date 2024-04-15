@@ -7,11 +7,12 @@ import 'arrive';
 
 const faker = new Faker({ locale: 'en_AU', locales: { ...allLocales } });
 
-faker.seed(2);
-
 const run = async (shouldClickNext = true) => {
   const heading = await waitForElement('h1');
   if (!heading || !heading.textContent) return;
+
+  const { fakerSeedValue } = await chrome.storage.local.get(['fakerSeedValue']);
+  faker.seed(fakerSeedValue);
 
   const title = heading.textContent;
   switch (title) {

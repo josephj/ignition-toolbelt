@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Center,
+  Button,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,13 +12,14 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Textarea,
+  FormControl,
+  FormLabel,
+  Input,
+  VStack,
 } from '@chakra-ui/react';
 
-import { AcknowledgementList } from '../Popup/acknowledgement-list';
-import { Shortcuts } from '../Popup/shortcuts';
-import { RefinedIgnition } from '../Popup/refined-ignition';
-import { CreateNewAccount } from '../Popup/create-new-account';
+import { RefinedIgnition } from './refined-ignition';
+import { faker } from '@faker-js/faker';
 
 export const Panel = ({
   isOpen,
@@ -27,54 +28,55 @@ export const Panel = ({
   isOpen: boolean;
   onClose(): void;
 }) => {
-  const [token, setToken] = useState();
+  const [, setToken] = useState();
+  const [email, setEmail] = useState<string>();
 
   useEffect(() => {
-    chrome.storage.local.get(['accessToken']).then(({ accessToken }) => {
-      setToken(accessToken);
-    });
+    chrome.storage.local
+      .get(['accessToken', 'fakerSeedValue'])
+      .then(({ accessToken, fakerSeedValue }) => {
+        setToken(accessToken);
+        faker.seed(fakerSeedValue);
+        const email = faker.internet.email();
+        setEmail(email);
+      });
   }, []);
+
+  const handleResetFaker = async () => {
+    const fakerSeedValue = new Date().getTime();
+    await chrome.storage.local.set({ fakerSeedValue });
+    faker.seed(fakerSeedValue);
+    const email = faker.internet.email();
+    setEmail(email);
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Ignition Toolbelt</ModalHeader>
+        <ModalHeader>Settings</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Tabs>
             <TabList>
-              <Tab>Acknowledgements</Tab>
-              <Tab>Shortcuts</Tab>
-              <Tab>Access Token</Tab>
-              <Tab>Refined Ignition</Tab>
-              <Tab>Create New Accounts</Tab>
+              <Tab>Features</Tab>
+              <Tab>Autofill Setting</Tab>
             </TabList>
 
             <TabPanels p={5}>
               <TabPanel>
-                <AcknowledgementList />
-              </TabPanel>
-              <TabPanel>
-                <Center>
-                  <Shortcuts />
-                  {/*<iframe*/}
-                  {/*  width="100%"*/}
-                  {/*  height="600px"*/}
-                  {/*  src="https://ignitionapp-33185.sandbox.ignitionapp.com/console/practice/prac_myhsvja7fwfqacaahsca"*/}
-                  {/*></iframe>*/}
-                </Center>
-              </TabPanel>
-              <TabPanel>
-                <Textarea fontSize="11px" height="140px" value={token} />
-              </TabPanel>
-              <TabPanel>
                 <RefinedIgnition />
               </TabPanel>
               <TabPanel>
-                <Center>
-                  <CreateNewAccount />
-                </Center>
+                <VStack spacing="large">
+                  <FormControl>
+                    <FormLabel>Current email</FormLabel>
+                    <Input isDisabled value={email} />
+                  </FormControl>
+                  <Button colorScheme="brand" onClick={handleResetFaker}>
+                    Reset
+                  </Button>
+                </VStack>
               </TabPanel>
             </TabPanels>
           </Tabs>

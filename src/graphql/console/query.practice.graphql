@@ -2,5 +2,16 @@ query practice($id: ID!) {
   practice(id: $id) {
     id
     referenceNumber
+    paymentSettings {
+      isCollectionsEnabled
+      isDisbursalsEnabled
+      onboardedPreset
+    }
+    plan {
+      name
+    }
+    stripeIntegrationAccount {
+      dashboardUri
+    }
   }
 }

@@ -9,9 +9,10 @@ const BANK_ROUTING_NUMBER_SELECTOR = 'input[placeholder="Routing Number"]';
 const BANK_BSB_NUMBER_SELECTOR = 'input[placeholder="BSB"]';
 const BANK_ACCOUNT_NUMBER_SELECTOR = 'input[placeholder="Account Number"]';
 
-faker.seed(2);
-
 const run = async (shouldClickNext = false) => {
+  const { fakerSeedValue } = await chrome.storage.local.get(['fakerSeedValue']);
+  faker.seed(fakerSeedValue);
+
   const bankAccountName = await waitForElement<HTMLInputElement>(
     BANK_ACCOUNT_NAME_SELECTOR
   );

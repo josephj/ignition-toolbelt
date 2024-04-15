@@ -18,6 +18,7 @@ const config = {
       documents: [
         'src/graphql/ignition/*.graphql',
         'src/pages/Popup/**/*.graphql',
+        '!src/pages/Content/create-new-account/*.graphql',
       ],
       plugins: ['typescript', 'typescript-operations', ...commonPlugins],
       config: {
@@ -30,6 +31,8 @@ const config = {
       documents: [
         'src/graphql/ignition/*.graphql',
         'src/pages/Popup/**/*.graphql',
+        'src/pages/Content/**/*.graphql',
+        '!src/pages/Content/create-new-account/*.graphql',
       ],
       plugins: ['typescript-react-apollo', ...commonPlugins],
       config: {

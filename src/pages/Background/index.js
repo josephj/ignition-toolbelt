@@ -12,7 +12,6 @@ import { getActiveTabUrl, getHostUrl } from '../Popup/utils';
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   const { type, value } = request;
-  console.log('[DEBUG] Background onMessage', type, value);
 
   if (type === 'ACCESS_TOKEN' && value) {
     chrome.storage.local.set({ accessToken: value });
@@ -30,3 +29,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     }
   }
 });
+
+(async () => {
+  const { fakerSeedValue } = await chrome.storage.local.get('fakerSeedValue');
+  if (!fakerSeedValue) {
+    chrome.storage.local.set({ fakerSeedValue: new Date().getTime() });
+  }
+})();

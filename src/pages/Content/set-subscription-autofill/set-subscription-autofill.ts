@@ -2,10 +2,11 @@ import { simulateSelect, simulateType } from './util';
 import { faker } from '@faker-js/faker';
 import { waitForElement } from '../lib';
 
-faker.seed(2);
-
 const run = async () => {
   console.log('[DEBUG] run()');
+
+  const { fakerSeedValue } = await chrome.storage.local.get(['fakerSeedValue']);
+  faker.seed(fakerSeedValue);
 
   const firstNameEl = await waitForElement<HTMLInputElement>(
     '[name="firstName"]'

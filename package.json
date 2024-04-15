@@ -36,6 +36,7 @@
     "react-draggable": "^4.4.6",
     "react-hook-form": "^7.43.9",
     "react-hot-loader": "^4.13.0",
+    "react-select": "^5.8.0",
     "whatwg-fetch": "^3.6.20"
   },
   "devDependencies": {

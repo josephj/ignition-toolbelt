@@ -4411,4 +4411,4 @@ export type PracticeQueryVariables = Exact<{
 }>;
 
 
-export type PracticeQuery = { __typename: 'Query', practice: { __typename: 'Practice', id: string, referenceNumber: string } };
+export type PracticeQuery = { __typename: 'Query', practice: { __typename: 'Practice', id: string, referenceNumber: string, paymentSettings: { __typename: 'PaymentsSettings', isCollectionsEnabled: boolean, isDisbursalsEnabled: boolean, onboardedPreset?: PaymentsOnboardedPresetType }, plan?: { __typename: 'Plan', name: string }, stripeIntegrationAccount?: { __typename: 'StripeIntegrationAccount', dashboardUri: any } } };

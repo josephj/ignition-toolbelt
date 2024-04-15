@@ -64,7 +64,7 @@ export const getEnvByUrl = (url: string) => {
   }
 
   if (url.includes('sandbox.ignitionapp.com')) {
-    return 'development';
+    return 'sandbox';
   }
 
   return null;

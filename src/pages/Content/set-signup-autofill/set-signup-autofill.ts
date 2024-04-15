@@ -2,9 +2,10 @@ import { simulateClick, simulateSelect, simulateType } from './util';
 import { faker } from '@faker-js/faker';
 import { q, waitForElement } from '../lib';
 
-faker.seed(2);
-
 const run = async (url: string, shouldClickNext = false) => {
+  const { fakerSeedValue } = await chrome.storage.local.get(['fakerSeedValue']);
+  faker.seed(fakerSeedValue);
+
   const { pathname } = new URL(url);
   switch (pathname) {
     case '/sign-up/sso': {

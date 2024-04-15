@@ -4,6 +4,7 @@
 
 import { registerObserver } from './utils';
 import { MISSION_CONTROL_REDIRECT } from '../../lib/features';
+import { q } from './lib';
 
 type FormElement = HTMLFormElement | null | undefined;
 
@@ -24,6 +25,11 @@ export const setMissionControlRedirect = (value = null) => {
         formEl.method = 'post';
         formEl.target = '_blank';
       }
+    }
+
+    if (window !== window.parent) {
+      q('[form="support-signin-form"]')?.remove();
+      q('[placeholder^="Search for a practice"]')?.remove();
     }
   });
 };

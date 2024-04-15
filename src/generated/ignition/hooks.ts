@@ -85,6 +85,9 @@ export const CurrentPracticeDocument = gql`
     query currentPractice {
   currentPractice {
     id
+    referenceNumber
+    name
+    countryCode
   }
 }
     `;
@@ -237,3 +240,45 @@ export type AcknowledgementsQueryHookResult = ReturnType<typeof useAcknowledgeme
 export type AcknowledgementsLazyQueryHookResult = ReturnType<typeof useAcknowledgementsLazyQuery>;
 export type AcknowledgementsSuspenseQueryHookResult = ReturnType<typeof useAcknowledgementsSuspenseQuery>;
 export type AcknowledgementsQueryResult = Apollo.QueryResult<Types.AcknowledgementsQuery, Types.AcknowledgementsQueryVariables>;
+export const AppStatusDocument = gql`
+    query appStatus {
+  currentPractice {
+    id
+    referenceNumber
+    name
+    countryCode
+  }
+}
+    `;
+
+/**
+ * __useAppStatusQuery__
+ *
+ * To run a query within a React component, call `useAppStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAppStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAppStatusQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAppStatusQuery(baseOptions?: Apollo.QueryHookOptions<Types.AppStatusQuery, Types.AppStatusQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<Types.AppStatusQuery, Types.AppStatusQueryVariables>(AppStatusDocument, options);
+      }
+export function useAppStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Types.AppStatusQuery, Types.AppStatusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<Types.AppStatusQuery, Types.AppStatusQueryVariables>(AppStatusDocument, options);
+        }
+export function useAppStatusSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<Types.AppStatusQuery, Types.AppStatusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<Types.AppStatusQuery, Types.AppStatusQueryVariables>(AppStatusDocument, options);
+        }
+export type AppStatusQueryHookResult = ReturnType<typeof useAppStatusQuery>;
+export type AppStatusLazyQueryHookResult = ReturnType<typeof useAppStatusLazyQuery>;
+export type AppStatusSuspenseQueryHookResult = ReturnType<typeof useAppStatusSuspenseQuery>;
+export type AppStatusQueryResult = Apollo.QueryResult<Types.AppStatusQuery, Types.AppStatusQueryVariables>;
