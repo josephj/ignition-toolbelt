@@ -17475,3 +17475,29 @@ export type CurrentPracticeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CurrentPracticeQuery = { __typename: 'Query', currentPractice: { __typename: 'Practice', id: string, referenceNumber: string, name: string, countryCode: any } };
+
+export type AcknowledgementAddMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  level: AcknowledgementLevel;
+}>;
+
+
+export type AcknowledgementAddMutation = { __typename: 'Mutation', acknowledgementAdd?: { __typename: 'AcknowledgementAddPayload', acknowledgements: Array<{ __typename: 'Acknowledgement', id: string, level: AcknowledgementLevel, updatedAt: any }> } };
+
+export type AcknowledgementRemoveMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  level: AcknowledgementLevel;
+}>;
+
+
+export type AcknowledgementRemoveMutation = { __typename: 'Mutation', acknowledgementRemove?: { __typename: 'AcknowledgementRemovePayload', acknowledgements: Array<{ __typename: 'Acknowledgement', id: string, level: AcknowledgementLevel, updatedAt: any }> } };
+
+export type AcknowledgementsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AcknowledgementsQuery = { __typename: 'Query', acknowledgements: Array<{ __typename: 'Acknowledgement', id: string, level: AcknowledgementLevel, updatedAt: any }> };
+
+export type AppStatusQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AppStatusQuery = { __typename: 'Query', currentPractice: { __typename: 'Practice', id: string, referenceNumber: string, name: string, countryCode: any } };

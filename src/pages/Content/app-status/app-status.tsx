@@ -5,8 +5,8 @@ import { getEnvByUrl } from '../../Popup/utils';
 export type AccountInfo = {
   id: string;
   countryCode: string;
-  name: string;
-  referenceNumber: number;
+  name?: string;
+  referenceNumber?: string;
   env: string;
   loginUrl: string;
   lastAccessAt: number;

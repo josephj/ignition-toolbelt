@@ -18,6 +18,7 @@ const config = {
       documents: [
         'src/graphql/ignition/*.graphql',
         'src/pages/Popup/**/*.graphql',
+        'src/pages/Content/**/*.graphql',
         '!src/pages/Content/create-new-account/*.graphql',
       ],
       plugins: ['typescript', 'typescript-operations', ...commonPlugins],
@@ -54,20 +55,20 @@ const config = {
         inputMaybeValue: 'T | null',
       },
     },
-    'src/generated/console/request.ts': {
-      schema: './graphql/schemas/console.graphql',
-      documents: 'src/graphql/console/*.graphql',
-
-      plugins: ['typescript-graphql-request', ...commonPlugins],
-      config: {
-        inlineFragmentTypes: 'combine',
-        useTypeImports: true,
-      },
-      preset: 'import-types',
-      presetConfig: {
-        typesPath: './types',
-      },
-    },
+    // 'src/generated/console/request.ts': {
+    //   schema: './graphql/schemas/console.graphql',
+    //   documents: 'src/graphql/console/*.graphql',
+    //
+    //   plugins: ['typescript-graphql-request', ...commonPlugins],
+    //   config: {
+    //     inlineFragmentTypes: 'combine',
+    //     useTypeImports: true,
+    //   },
+    //   preset: 'import-types',
+    //   presetConfig: {
+    //     typesPath: './types',
+    //   },
+    // },
   },
   config: {
     namingConvention: {
