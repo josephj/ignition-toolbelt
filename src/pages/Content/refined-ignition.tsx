@@ -20,6 +20,16 @@ export const RefinedIgnition = () => {
   const handleToggleFeature = (feature: Feature) => async (e: ChangeEvent) => {
     const isChecked = (e.target as HTMLInputElement).checked;
 
+    if (feature === 'jira-mission-control-login' && isChecked) {
+      const isOkay = window.confirm(
+        "For accessing the cross domain data, when you view the Jira HELP ticket with a Mission Control link, your credential (Session ID and CSRF token) will be sent to a proxy API service that Joseph made. I don't store your data but it does a bit hacky. Are you sure you want to enable this?"
+      );
+      if (!isOkay) {
+        e.preventDefault();
+        return;
+      }
+    }
+
     setFeatureStates((prevState) => {
       const nextState = prevState.map(([f, value]) =>
         f === feature ? [f, isChecked] : [f, value]
@@ -39,12 +49,6 @@ export const RefinedIgnition = () => {
         <HStack>
           <Switch size="lg" isChecked isDisabled />
           <FormLabel fontSize="12px">
-            Jira - Quick MC Login in HELP tickets
-          </FormLabel>
-        </HStack>
-        <HStack>
-          <Switch size="lg" isChecked isDisabled />
-          <FormLabel fontSize="12px">
             Github - Autolink the Jira tickets
           </FormLabel>
         </HStack>
@@ -52,7 +56,7 @@ export const RefinedIgnition = () => {
           <HStack key={feature}>
             <Switch
               size="lg"
-              defaultChecked={value}
+              isChecked={value}
               id={`toggle-${feature}`}
               onChange={handleToggleFeature(feature)}
             />

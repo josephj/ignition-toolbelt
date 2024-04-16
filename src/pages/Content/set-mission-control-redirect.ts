@@ -3,17 +3,18 @@
  */
 
 import { registerObserver } from './utils';
-import { MISSION_CONTROL_REDIRECT } from '../../lib/features';
+// import { MISSION_CONTROL_REDIRECT } from '../../lib/features';
 import { q } from './lib';
 
 type FormElement = HTMLFormElement | null | undefined;
 
 const URI_REGEXP = /\/console\/practice\/prac_/;
-export const setMissionControlRedirect = (value = null) => {
+export const setMissionControlRedirect = (/*value = null*/) => {
   registerObserver(async () => {
-    const result = await chrome.storage.local.get([MISSION_CONTROL_REDIRECT]);
+    // const result = await chrome.storage.local.get([MISSION_CONTROL_REDIRECT]);
     const isMatchUrl = window.location.href.match(URI_REGEXP);
-    const isEnabled = value ? value : result[MISSION_CONTROL_REDIRECT] || false;
+    // const isEnabled = value ? value : result[MISSION_CONTROL_REDIRECT] || false;
+    const isEnabled = false;
     const formEl = document.querySelector(
       '#support-signin-form'
     ) as FormElement;

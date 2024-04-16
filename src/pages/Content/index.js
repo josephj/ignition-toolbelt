@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import { App } from './App';
 
-import { setCaptureAccessToken } from './set-capture-access-token';
+// import { setCaptureAccessToken } from './set-capture-access-token';
 import { setComicSans } from './set-comics-sans';
 import { setMissionControlRedirect } from './set-mission-control-redirect';
 import { setNpeExit } from './set-npe-exit';
@@ -11,6 +11,7 @@ import { setGithubTicketAutolink } from './set-github-ticket-autolink';
 import { setJiraMissionControlLogin } from './set-jira-mission-control-login';
 import {
   COMIC_SANS,
+  JIRA_MISSION_CONTROL_LOGIN,
   MISSION_CONTROL_REDIRECT,
   NPE_EXIT,
 } from '../../lib/features';
@@ -21,7 +22,7 @@ import { setStripeConnectAutofill } from './set-stripe-connect-autofill';
 import { setSubscriptionAutofill } from './set-subscription-autofill';
 
 window.addEventListener('load', async () => {
-  await setCaptureAccessToken();
+  // await setCaptureAccessToken();
   await setComicSans();
   await setMissionControlRedirect();
   await setNpeExit();
