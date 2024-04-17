@@ -13,37 +13,22 @@ const commonPlugins = [
 
 const config = {
   generates: {
-    'src/generated/ignition/types.ts': {
-      schema: './graphql/schemas/ignition.graphql',
-      documents: [
-        'src/graphql/ignition/*.graphql',
-        'src/pages/Popup/**/*.graphql',
-        'src/pages/Content/**/*.graphql',
-        '!src/pages/Content/create-new-account/*.graphql',
-      ],
+    'src/generated/auth_api/types.ts': {
+      schema: './graphql/schemas/auth_api.graphql',
+      documents: 'src/graphql/auth_api/*.graphql',
       plugins: ['typescript', 'typescript-operations', ...commonPlugins],
       config: {
         maybeValue: 'T',
         inputMaybeValue: 'T | null',
       },
     },
-    'src/generated/ignition/hooks.ts': {
+    'src/generated/ignition/types.ts': {
       schema: './graphql/schemas/ignition.graphql',
-      documents: [
-        'src/graphql/ignition/*.graphql',
-        'src/pages/Popup/**/*.graphql',
-        'src/pages/Content/**/*.graphql',
-        '!src/pages/Content/create-new-account/*.graphql',
-      ],
-      plugins: ['typescript-react-apollo', ...commonPlugins],
+      documents: 'src/graphql/ignition/*.graphql',
+      plugins: ['typescript', 'typescript-operations', ...commonPlugins],
       config: {
-        withHooks: true,
-        inlineFragmentTypes: 'combine',
-        useTypeImports: true,
-      },
-      preset: 'import-types',
-      presetConfig: {
-        typesPath: './types',
+        maybeValue: 'T',
+        inputMaybeValue: 'T | null',
       },
     },
     'src/generated/console/types.ts': {
@@ -55,18 +40,47 @@ const config = {
         inputMaybeValue: 'T | null',
       },
     },
-    // 'src/generated/console/request.ts': {
-    //   schema: './graphql/schemas/console.graphql',
-    //   documents: 'src/graphql/console/*.graphql',
-    //
-    //   plugins: ['typescript-graphql-request', ...commonPlugins],
+    'src/generated/dev_api/types.ts': {
+      schema: './graphql/schemas/dev_api.graphql',
+      documents: 'src/graphql/dev_api/*.graphql',
+      plugins: ['typescript', 'typescript-operations', ...commonPlugins],
+      config: {
+        maybeValue: 'T',
+        inputMaybeValue: 'T | null',
+      },
+    },
+    'src/generated/ignition/hooks.ts': {
+      schema: './graphql/schemas/ignition.graphql',
+      documents: 'src/graphql/ignition/*.graphql',
+      plugins: ['typescript-react-apollo', ...commonPlugins],
+      config: {
+        withHooks: true,
+        inlineFragmentTypes: 'combine',
+        useTypeImports: true,
+      },
+      preset: 'import-types',
+      presetConfig: {
+        typesPath: './types',
+      },
+    },
+    // 'ignition-local-hooks': {
+    //   schema: `./graphql/schemas/ignition.graphql`,
+    //   documents: 'src/pages/**/lib/gql/ignition/*.graphql',
+    //   preset: 'near-operation-file',
+    //   presetConfig: {
+    //     extension: '.ts',
+    //     fileName: 'ignition-generated-hooks',
+    //     folder: '..',
+    //     baseTypesPath: '~@generated/ignition/types',
+    //   },
+    //   plugins: [
+    //     'typescript-operations',
+    //     'typescript-react-apollo',
+    //     ...commonPlugins,
+    //   ],
     //   config: {
     //     inlineFragmentTypes: 'combine',
     //     useTypeImports: true,
-    //   },
-    //   preset: 'import-types',
-    //   presetConfig: {
-    //     typesPath: './types',
     //   },
     // },
   },
@@ -77,9 +91,9 @@ const config = {
     useImplementingTypes: true,
     nonOptionalTypename: true,
   },
-  // hooks: {
-  //   afterAllFileWrite: ['prettier --write'],
-  // },
+  hooks: {
+    afterAllFileWrite: ['prettier --write'],
+  },
 };
 
 module.exports = config;

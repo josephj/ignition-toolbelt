@@ -1,9 +1,0 @@
-mutation acknowledgementRemove($id: ID!, $level: AcknowledgementLevel!) {
-  acknowledgementRemove(input: { id: $id, level: $level }) {
-    acknowledgements {
-      id
-      level
-      updatedAt
-    }
-  }
-}

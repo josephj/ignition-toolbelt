@@ -1,4 +1,4 @@
-mutation removeAcknowledgement($id: ID!, $level: AcknowledgementLevel!) {
+mutation acknowledgementRemove($id: ID!, $level: AcknowledgementLevel!) {
   acknowledgementRemove(input: { id: $id, level: $level }) {
     acknowledgements {
       id

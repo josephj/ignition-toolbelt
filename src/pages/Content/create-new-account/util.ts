@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
-import MUTATION_CREATE_BASE_ACCOUNT from './mutation.createPractice.graphql';
-import MUTATION_USER_LOGIN from './mutation.userLogin.graphql';
+import MUTATION_CREATE_BASE_ACCOUNT from '../../../graphql/dev_api/mutation.createPractice.graphql';
+import MUTATION_USER_LOGIN from '../../../graphql/auth_api/mutation.userLogin.graphql';
 
 export const authClient = new ApolloClient({
   uri: '/auth-api/graphql',

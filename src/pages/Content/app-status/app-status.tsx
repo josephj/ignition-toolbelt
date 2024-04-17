@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useAppStatusQuery } from '../../../generated/ignition/hooks';
+import { useCurrentPracticeQuery } from '@generated/ignition/hooks';
 import { getEnvByUrl } from '../../Popup/utils';
 
 export type AccountInfo = {
@@ -15,7 +15,7 @@ export type AccountInfo = {
 type Result = { [storageItem: string]: { [id: string]: AccountInfo } };
 
 export const AppStatus = () => {
-  const { data } = useAppStatusQuery();
+  const { data } = useCurrentPracticeQuery();
 
   const { id, countryCode, name, referenceNumber } =
     data?.currentPractice || {};

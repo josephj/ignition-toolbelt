@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, useBoolean, Stack } from '@chakra-ui/react';
 import { devClient, signIn, createBasePractice } from './util';
-import MUTATION_CREATE_STANDARD_ACCOUNT from './mutation.seedStandardPractice.graphql';
-import MUTATION_CREATE_ACCOUNT_WITH_PAYMENTS from './mutation.seedWithPayments.graphql';
+import MUTATION_CREATE_STANDARD_ACCOUNT from '../../../graphql/dev_api/mutation.seedStandardPractice.graphql';
+import MUTATION_CREATE_ACCOUNT_WITH_PAYMENTS from '../../../graphql/dev_api/mutation.seedWithPayments.graphql';
 
 export const CreateNewAccount = () => {
   const [isProcessing, setProcessing] = useBoolean(false);
