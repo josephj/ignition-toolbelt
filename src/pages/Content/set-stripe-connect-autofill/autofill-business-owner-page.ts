@@ -52,10 +52,6 @@ export const autofillBusinessOwnerPage = async (
   if (phoneNumber) {
     simulateType(phoneNumber, faker.helpers.fromRegExp(/041[0-9]{7}/));
   }
-  console.log(
-    '=>(autofill-business-owner-page.ts:65) shouldClickNext',
-    shouldClickNext
-  );
 
   if (shouldClickNext) {
     const nextButton = q('a:contains("Continue")');

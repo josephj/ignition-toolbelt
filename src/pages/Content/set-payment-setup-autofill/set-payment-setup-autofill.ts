@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker';
 import { q, simulateClick, simulateType, waitForElement } from '../lib';
 import 'arrive';
 
-const NEXT_BUTTON_SELECTOR = 'button[type="button"]:contains("Next")';
 const SUBMIT_BUTTON_SELECTOR = 'button[type="button"]:contains("Submit")';
 const BANK_ACCOUNT_NAME_SELECTOR = 'input[placeholder="Account Holder Name"]';
 const BANK_ROUTING_NUMBER_SELECTOR = 'input[placeholder="Routing Number"]';
@@ -35,12 +34,12 @@ const run = async (shouldClickNext = false) => {
 };
 
 export const setPaymentSetupAutofill = () => {
-  chrome.runtime.onMessage.addListener(({ type }, sender, sendResponse) => {
+  chrome.runtime.onMessage.addListener(({ type }) => {
     if (type !== 'set-payment-setup-autofill') {
       return;
     }
 
     // @ts-ignore
-    document.arrive('.pie-auto-name-on-bank-account', run);
+    document.arrive('.pie-auto-name-on-bank-account', () => run());
   });
 };

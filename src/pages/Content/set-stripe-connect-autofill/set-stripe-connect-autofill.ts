@@ -7,7 +7,7 @@ import 'arrive';
 
 const faker = new Faker({ locale: 'en_AU', locales: { ...allLocales } });
 
-const run = async (shouldClickNext = true) => {
+const run = async (shouldClickNext = false) => {
   const heading = await waitForElement('h1');
   if (!heading || !heading.textContent) return;
 
@@ -30,7 +30,7 @@ const run = async (shouldClickNext = true) => {
         const button = await waitForElement(
           'a[data-test="test-mode-fill-button"]'
         );
-        if (button) {
+        if (shouldClickNext && button) {
           simulateClick(button);
         }
       }
@@ -56,7 +56,7 @@ export const setStripeConnectAutofill = () => {
       // @ts-ignore
       document.arrive(
         'div[data-testid="account-onboarding-container"] h1',
-        run
+        () => run()
       );
     }
 

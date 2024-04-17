@@ -42,8 +42,7 @@ const run = async (url: string, shouldClickNext = false) => {
       const notSureButton = await waitForElement<HTMLButtonElement>(
         'button:contains("not sure")'
       );
-      console.log('=>(set-signup-autofill.ts:44) notSureButton', notSureButton);
-      if (notSureButton) {
+      if (shouldClickNext && notSureButton) {
         simulateClick(notSureButton);
       }
       break;
