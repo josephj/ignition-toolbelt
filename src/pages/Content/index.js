@@ -3,18 +3,12 @@ import { createRoot } from 'react-dom/client';
 
 import { App } from './App';
 
-// import { setCaptureAccessToken } from './set-capture-access-token';
 import { setComicSans } from './set-comics-sans';
 import { setMissionControlRedirect } from './set-mission-control-redirect';
 import { setNpeExit } from './set-npe-exit';
 import { setGithubTicketAutolink } from './set-github-ticket-autolink';
 import { setJiraMissionControlLogin } from './set-jira-mission-control-login';
-import {
-  COMIC_SANS,
-  JIRA_MISSION_CONTROL_LOGIN,
-  MISSION_CONTROL_REDIRECT,
-  NPE_EXIT,
-} from '../../lib/features';
+import { COMIC_SANS, NPE_EXIT } from '../../lib/features';
 import { checkAvailability } from '../Popup/utils';
 import { setPaymentSetupAutofill } from './set-payment-setup-autofill';
 import { setSignupAutofill } from './set-signup-autofill';
@@ -22,7 +16,6 @@ import { setStripeConnectAutofill } from './set-stripe-connect-autofill';
 import { setSubscriptionAutofill } from './set-subscription-autofill';
 
 window.addEventListener('load', async () => {
-  // await setCaptureAccessToken();
   await setComicSans();
   await setMissionControlRedirect();
   await setNpeExit();
@@ -34,7 +27,7 @@ window.addEventListener('load', async () => {
   await setStripeConnectAutofill();
 });
 
-const WIDGET_EXCLUDED_PATHS = ['/sign-in', '/sign-up', '/console'];
+const WIDGET_EXCLUDED_PATHS = ['/sign-in', '/sign-up', '/console', '/graphiql'];
 
 chrome.storage.local.onChanged.addListener(async (changes) => {
   const keys = Object.keys(changes);
@@ -42,7 +35,6 @@ chrome.storage.local.onChanged.addListener(async (changes) => {
     const { newValue } = changes[key];
     if (key === COMIC_SANS) setComicSans(newValue);
     if (key === NPE_EXIT) setNpeExit(newValue);
-    if (key === MISSION_CONTROL_REDIRECT) setMissionControlRedirect(newValue);
   });
 });
 
@@ -58,8 +50,9 @@ chrome.runtime.onMessage.addListener(async ({ type, value }) => {
     if (!isWidgetAvailable) return;
 
     let rootEl = document.getElementById('ignition-toolbelt-app');
-    if (!rootEl) {
+    if (rootEl === null) {
       rootEl = document.createElement('div');
+      rootEl.id = 'ignition-toolbelt-app';
       if (document.body) {
         document.body.appendChild(rootEl);
       }

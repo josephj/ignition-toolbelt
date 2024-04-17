@@ -25,7 +25,8 @@ export const Popup = () => {
   useEffect(() => {
     const loadAccounts = async () => {
       const result = await chrome.storage.local.get(['accounts']);
-      setAccounts(Object.values(result.accounts));
+      const accounts = result.accounts || {};
+      setAccounts(Object.values(accounts));
     };
 
     loadAccounts();
