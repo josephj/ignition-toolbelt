@@ -48,22 +48,24 @@ const handleClick = async (e: MouseEvent) => {
   }
 
   await wait(1000);
-
   newWindow.close();
-  try {
-    const referenceNumber = linkEl.getAttribute(DATA_ATTR);
-    if (referenceNumber) {
-      const hasLogin = await checkPracticeLogin({ referenceNumber });
-      if (hasLogin) {
-        linkEl.classList.add('disabled');
-        linkEl.innerHTML = `You've logged in`;
-      }
-    }
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      console.error(e.message);
-    }
-  }
+
+  linkEl.classList.add('disabled');
+  linkEl.innerHTML = `You've logged in`;
+  // try {
+  //   const referenceNumber = linkEl.getAttribute(DATA_ATTR);
+  //   if (referenceNumber) {
+  //     const hasLogin = await checkPracticeLogin({ referenceNumber });
+  //     if (hasLogin) {
+  //       linkEl.classList.add('disabled');
+  //       linkEl.innerHTML = `You've logged in`;
+  //     }
+  //   }
+  // } catch (e: unknown) {
+  //   if (e instanceof Error) {
+  //     console.error(e.message);
+  //   }
+  // }
 };
 
 const renderContainer = (rootEl: HTMLElement, practiceId: string) => {
@@ -76,7 +78,7 @@ const renderContainer = (rootEl: HTMLElement, practiceId: string) => {
   containerEl.style.top = `${rootEl.offsetHeight + 10}px`;
   containerEl.style.right = '5px';
   containerEl.innerHTML = [
-    `<img class="ignt-jira-mission-control-login-logo" src="${iconUrl}" />`,
+    `<img class="ignt-jira-mission-control-login-logo" src="${iconUrl}" alt="Ignition logo" />`,
     `<a href="#" class="ignt-jira-mission-control-login-link disabled" ${DATA_ATTR}="#">Detecting...</a>`,
   ].join('&nbsp;');
   if (rootEl.parentNode) rootEl.parentNode.appendChild(containerEl);
@@ -137,20 +139,18 @@ const run = async (targetEl: HTMLLinkElement) => {
 };
 
 export const setJiraMissionControlLogin = () => {
-  chrome.runtime.onMessage.addListener(
-    async ({ type }, sender, sendResponse) => {
-      if (type === 'set-jira-mission-control-login') {
-        try {
-          setTimeout(() => {
-            const linkEl = q(UNHANDLED_LINK_SELECTOR);
-            if (linkEl) run(linkEl as HTMLLinkElement);
-          }, 1000);
-        } catch (e) {
-          if (e instanceof Error) {
-            console.error(e.message);
-          }
+  chrome.runtime.onMessage.addListener(async ({ type }) => {
+    if (type === 'set-jira-mission-control-login') {
+      try {
+        setTimeout(() => {
+          const linkEl = q(UNHANDLED_LINK_SELECTOR);
+          if (linkEl) run(linkEl as HTMLLinkElement);
+        }, 1000);
+      } catch (e) {
+        if (e instanceof Error) {
+          console.error(e.message);
         }
       }
     }
-  );
+  });
 };
