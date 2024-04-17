@@ -4,7 +4,7 @@ import { AppWrapper } from './app-wrapper';
 import { Bubble } from './bubble';
 import { useBoolean } from '@chakra-ui/react';
 import { Panel } from './panel';
-import { AppStatus } from './app-status/app-status';
+import { AppStatus } from './app-status';
 import { MissionControl } from './mission-control';
 import { AcknowledgementModal } from './acknowledgement-modal';
 import { CreateAccountModal } from './create-account-modal';
@@ -17,13 +17,10 @@ export const App = ({ csrfToken }: { csrfToken: string }) => {
   const [isMissionControlVisible, setMissionControlVisibility] = useBoolean();
   const [isCreateAccountVisible, setCreateAccountVisibility] = useBoolean();
 
-  const handleSignIn = () => {
-    // do nothing
-  };
-
   return (
     <AppWrapper csrfToken={csrfToken}>
       <Bubble
+        csrfToken={csrfToken}
         onMissionControlClick={(url, name) => {
           setMissionControlName(name);
           setMissionControlUrl(url);

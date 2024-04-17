@@ -63,6 +63,24 @@ const config = {
         typesPath: './types',
       },
     },
+    'src/generated/console/requests.ts': {
+      schema: './graphql/schemas/console.graphql',
+      documents: 'src/graphql/console/*.graphql',
+      plugins: [
+        'typescript',
+        'typescript-operations',
+        'typescript-graphql-request',
+        ...commonPlugins,
+      ],
+      config: {
+        inlineFragmentTypes: 'combine',
+        useTypeImports: true,
+      },
+      preset: 'import-types',
+      presetConfig: {
+        typesPath: './types',
+      },
+    },
     // 'ignition-local-hooks': {
     //   schema: `./graphql/schemas/ignition.graphql`,
     //   documents: 'src/pages/**/lib/gql/ignition/*.graphql',

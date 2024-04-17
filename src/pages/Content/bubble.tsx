@@ -7,21 +7,28 @@ import {
   MenuItem,
   MenuList,
   MenuButton,
+  Stack,
   Text,
 } from '@chakra-ui/react';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Draggable from 'react-draggable';
-import { useCurrentPracticeQuery } from '../../generated/ignition/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faArrowUpRightFromSquare,
   faFlag,
   faGear,
   faScrewdriverWrench,
   faWandMagicSparkles,
   faTerminal,
 } from '@fortawesome/free-solid-svg-icons';
+import { faStripeS } from '@fortawesome/free-brands-svg-icons';
+import { GraphQLClient } from 'graphql-request';
+import { useCurrentPracticeQuery } from '@generated/ignition/hooks';
+import { PracticeQuery, practiceQuerySdk } from '@generated/console/requests';
+
 import { getEnvByUrl } from '../Popup/utils';
 
+const isDevelopmentEnv = getEnvByUrl(window.location.href) === 'development';
 const iconUrl = chrome.runtime.getURL('icon-128.png');
 
 const countryCodeToFlagEmoji = (countryCode: string) => {
@@ -32,30 +39,60 @@ const countryCodeToFlagEmoji = (countryCode: string) => {
   return String.fromCodePoint(...codePoints);
 };
 
+const createConsoleGraphqlClient = (csrfToken: string) => {
+  const urlScheme = new URL(window.location.href);
+  const protocol = urlScheme.protocol;
+  const host = urlScheme.host;
+  const uri = `${protocol}//${host}/console/graphql`;
+  return new GraphQLClient(uri, {
+    headers: {
+      'X-CSRF-Token': csrfToken,
+    },
+    credentials: 'include',
+  });
+};
+
+const fetchConsolePracticeData = async (id: string, csrfToken: string) => {
+  const consoleClient = createConsoleGraphqlClient(csrfToken);
+  const sdk = practiceQuerySdk(consoleClient);
+  try {
+    return sdk.practice({ id });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const Bubble = ({
+  csrfToken,
   onMissionControlClick,
   onPanelClick,
   onAcknowledgementClick,
   onClickCreateNewAccount,
 }: {
+  csrfToken: string;
   onMissionControlClick(url: string, name: string): void;
   onPanelClick(): void;
   onAcknowledgementClick(): void;
   onClickCreateNewAccount(): void;
 }) => {
-  const { data, loading } = useCurrentPracticeQuery();
+  const [consolePracticeData, setConsolePracticeData] =
+    useState<PracticeQuery['practice']>();
+  const { data } = useCurrentPracticeQuery();
   const [position] = useState({ x: 50, y: -100 });
   const dragRef = useRef(null);
 
-  if (!data || loading) {
-    return null;
-  }
+  const { id, name, countryCode, referenceNumber } =
+    data?.currentPractice || {};
 
-  const {
-    currentPractice: { id, name, countryCode },
-  } = data || {};
-
-  const isDevelopmentEnv = getEnvByUrl(window.location.href) === 'development';
+  useEffect(() => {
+    if (id) {
+      fetchConsolePracticeData(id, csrfToken).then((practiceData) => {
+        if (practiceData?.practice) {
+          setConsolePracticeData(practiceData.practice);
+        }
+      });
+    }
+  }, [id, csrfToken]);
 
   const handleClickMissionControl = (e: React.MouseEvent) => {
     const url = `${window.location.origin}/console/practice/${id}`;
@@ -73,6 +110,25 @@ export const Bubble = ({
     } else {
       onMissionControlClick(url, 'GraphiQL');
     }
+  };
+
+  const { name: planName } = consolePracticeData?.plan || {};
+  const { isDisbursalsEnabled, isCollectionsEnabled } =
+    consolePracticeData?.paymentSettings || {};
+  const stripeDashboardUri =
+    consolePracticeData?.stripeIntegrationAccount?.dashboardUri;
+
+  const renderPayment = () => {
+    if (isDisbursalsEnabled && isCollectionsEnabled) {
+      return <Text fontSize="xsmall">Payments: On</Text>;
+    }
+    if (!isDisbursalsEnabled && !isCollectionsEnabled) {
+      return <Text fontSize="xsmall">Payments: Off</Text>;
+    }
+    if (!isDisbursalsEnabled) {
+      return <Text fontSize="xsmall">Collection: On</Text>;
+    }
+    return null;
   };
 
   return (
@@ -102,11 +158,27 @@ export const Bubble = ({
             <Image src={iconUrl} width="18px" height="18px" draggable={false} />
           </MenuButton>
           <MenuList>
-            <HStack px="small" spacing="small">
-              <Text fontSize="large" fontWeight="medium">
-                {countryCodeToFlagEmoji(countryCode)}
+            <HStack px="small" spacing="small" alignItems="flex-start">
+              <Text
+                color="brand"
+                fontSize="large"
+                fontWeight="medium"
+                position="relative"
+                top="-3px"
+              >
+                {countryCode ? countryCodeToFlagEmoji(countryCode) : '🌍'}
               </Text>
-              <Text color="brand">{name}</Text>
+              <Stack spacing="xsmall">
+                <HStack>
+                  <Text fontWeight="medium">
+                    {name} ({referenceNumber})
+                  </Text>
+                  <Text display="inline" color="gray.500" fontSize="xsmall">
+                    {planName}
+                  </Text>
+                </HStack>
+                {renderPayment()}
+              </Stack>
             </HStack>
             <MenuDivider />
             <MenuItem
@@ -127,6 +199,22 @@ export const Bubble = ({
             >
               GraphiQL
             </MenuItem>
+            {stripeDashboardUri ? (
+              <MenuItem
+                as="a"
+                href={stripeDashboardUri}
+                target="_blank"
+                // @ts-ignore
+                icon={<FontAwesomeIcon icon={faStripeS} />}
+              >
+                <HStack>
+                  <Text>Stripe dashboard</Text>
+                  <Text as="span" fontSize="xsmall">
+                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                  </Text>
+                </HStack>
+              </MenuItem>
+            ) : null}
             {isDevelopmentEnv ? (
               <MenuItem
                 icon={<FontAwesomeIcon icon={faWandMagicSparkles} />}

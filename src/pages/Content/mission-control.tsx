@@ -1,6 +1,5 @@
 import {
   HStack,
-  Icon,
   Link,
   Modal,
   ModalBody,
@@ -11,7 +10,6 @@ import {
   Text,
 } from '@chakra-ui/react';
 import React from 'react';
-import { useCurrentPracticeQuery } from '../../generated/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
@@ -51,7 +49,13 @@ export const MissionControl = ({
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody pb="xlarge">
-          <iframe src={url} width="100%" height="800px" frameBorder={0} />
+          <iframe
+            title="frame"
+            src={url}
+            width="100%"
+            height="800px"
+            frameBorder={0}
+          />
         </ModalBody>
       </ModalContent>
     </Modal>
