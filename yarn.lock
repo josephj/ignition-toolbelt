@@ -10277,6 +10277,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphql-request@npm:^5.1.0":
+  version: 5.2.0
+  resolution: "graphql-request@npm:5.2.0"
+  dependencies:
+    "@graphql-typed-document-node/core": ^3.1.1
+    cross-fetch: ^3.1.5
+    extract-files: ^9.0.0
+    form-data: ^3.0.0
+  peerDependencies:
+    graphql: 14 - 16
+  checksum: a8aa37816378898e6fc8c4db04a1c114c98f98d90718cf1680bd96b22724bd43b1210619f9b0d328b5c1acb4f7b76d2227a2537cd5ab059bb54cf0debecb33bf
+  languageName: node
+  linkType: hard
+
 "graphql-request@npm:^6.0.0":
   version: 6.1.0
   resolution: "graphql-request@npm:6.1.0"
@@ -10839,6 +10853,7 @@ __metadata:
     fs-extra: ^11.1.0
     graphql: ^16.7.1
     graphql-cli: ^4.1.0
+    graphql-request: ^5.1.0
     graphql-tag: ^2.12.6
     html-loader: ^4.2.0
     html-webpack-plugin: ^5.5.0

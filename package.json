@@ -1,6 +1,6 @@
 {
   "name": "ignitionapp-toolbelt",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A chrome extension boilerplate built with React 17, Webpack 5, and Webpack Dev Server 4",
   "license": "MIT",
   "repository": {
@@ -32,6 +32,7 @@
     "fetch-intercept": "^2.4.0",
     "framer-motion": "^6",
     "graphql": "^16.7.1",
+    "graphql-request": "^5.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6",

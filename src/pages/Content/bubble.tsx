@@ -119,15 +119,22 @@ export const Bubble = ({
     consolePracticeData?.stripeIntegrationAccount?.dashboardUri;
 
   const renderPayment = () => {
+    if (!consolePracticeData) {
+      return null;
+    }
+
     if (isDisbursalsEnabled && isCollectionsEnabled) {
       return <Text fontSize="xsmall">Payments: On</Text>;
     }
+
     if (!isDisbursalsEnabled && !isCollectionsEnabled) {
       return <Text fontSize="xsmall">Payments: Off</Text>;
     }
+
     if (!isDisbursalsEnabled) {
-      return <Text fontSize="xsmall">Collection: On</Text>;
+      return <Text fontSize="xsmall">Collection: On / Disbursal: Off</Text>;
     }
+
     return null;
   };
 
@@ -173,9 +180,11 @@ export const Bubble = ({
                   <Text fontWeight="medium">
                     {name} ({referenceNumber})
                   </Text>
-                  <Text display="inline" color="gray.500" fontSize="xsmall">
-                    {planName}
-                  </Text>
+                  {planName ? (
+                    <Text display="inline" color="gray.500" fontSize="xsmall">
+                      {planName}
+                    </Text>
+                  ) : null}
                 </HStack>
                 {renderPayment()}
               </Stack>
