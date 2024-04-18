@@ -86,11 +86,15 @@ export const Bubble = ({
 
   useEffect(() => {
     if (id) {
-      fetchConsolePracticeData(id, csrfToken).then((practiceData) => {
-        if (practiceData?.practice) {
-          setConsolePracticeData(practiceData.practice);
-        }
-      });
+      fetchConsolePracticeData(id, csrfToken)
+        .then((practiceData) => {
+          if (practiceData?.practice) {
+            setConsolePracticeData(practiceData.practice);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   }, [id, csrfToken]);
 
