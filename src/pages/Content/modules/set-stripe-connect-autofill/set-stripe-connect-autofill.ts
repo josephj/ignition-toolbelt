@@ -1,11 +1,11 @@
-import { Faker, allLocales } from '@faker-js/faker';
+import { en_AU, en, base, Faker } from '@faker-js/faker';
 import { simulateClick, simulateType, waitForElement } from '../../lib';
 import { autofillAboutBusinessPage } from './autofill-about-business-page';
 import { autofillBusinessDetailsPage } from './autofill-business-details-page';
 import { autofillBusinessOwnerPage } from './autofill-business-owner-page';
 import 'arrive';
 
-const faker = new Faker({ locale: 'en_AU', locales: { ...allLocales } });
+const faker = new Faker({ locale: [en_AU, en, base] });
 
 const run = async (shouldClickNext = false) => {
   const heading = await waitForElement('h1');

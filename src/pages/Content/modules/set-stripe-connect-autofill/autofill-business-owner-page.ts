@@ -5,6 +5,9 @@ export const autofillBusinessOwnerPage = async (
   faker: Faker,
   shouldClickNext: boolean = false
 ) => {
+  const { fakerSeedValue } = await chrome.storage.local.get(['fakerSeedValue']);
+  faker.seed(fakerSeedValue);
+
   const legalFirstName = q<HTMLInputElement>('input[name="first_name"]');
   const legalLastName = q<HTMLInputElement>('input[name="last_name"]');
   if (legalFirstName && legalLastName) {

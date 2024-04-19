@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+import { Faker, en_AU, en, base } from '@faker-js/faker';
 import { q, simulateClick, simulateType, waitForElement } from '../../lib';
 import 'arrive';
 
@@ -7,6 +7,8 @@ const BANK_ACCOUNT_NAME_SELECTOR = 'input[placeholder="Account Holder Name"]';
 const BANK_ROUTING_NUMBER_SELECTOR = 'input[placeholder="Routing Number"]';
 const BANK_BSB_NUMBER_SELECTOR = 'input[placeholder="BSB"]';
 const BANK_ACCOUNT_NUMBER_SELECTOR = 'input[placeholder="Account Number"]';
+
+const faker = new Faker({ locale: [en_AU, en, base] });
 
 const run = async (shouldClickNext = false) => {
   const { fakerSeedValue } = await chrome.storage.local.get(['fakerSeedValue']);

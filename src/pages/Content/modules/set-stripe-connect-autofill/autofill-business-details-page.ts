@@ -5,10 +5,10 @@ import {
   simulateType,
   waitForElement,
 } from '../../lib';
-import { Faker } from '@faker-js/faker';
+import type { Faker } from '@faker-js/faker';
 
 function generateFakeABN(faker: Faker) {
-  const prefix = faker.datatype.number({ min: 10, max: 99 }).toString();
+  const prefix = faker.number.int({ min: 10, max: 99 }).toString();
   const body = faker.datatype
     .number({ min: 100000000, max: 999999999 })
     .toString();
@@ -19,9 +19,14 @@ export const autofillBusinessDetailsPage = async (
   faker: Faker,
   shouldClickNext: boolean = false
 ) => {
-  const companyName = q<HTMLInputElement>('input[name="company[name]"]');
-  if (companyName) {
-    simulateType(companyName, faker.company.name());
+  const { fakerSeedValue } = await chrome.storage.local.get(['fakerSeedValue']);
+  faker.seed(fakerSeedValue);
+
+  const companyName = faker.company.name();
+
+  const companyNameField = q<HTMLInputElement>('input[name="company[name]"]');
+  if (companyNameField) {
+    simulateType(companyNameField, companyName);
   }
 
   const companyTaxId = q<HTMLInputElement>('input[name="company[tax_id]"]');
@@ -33,7 +38,7 @@ export const autofillBusinessDetailsPage = async (
     'input[name="business_profile[name]"]'
   );
   if (doingBusinessAs) {
-    simulateType(doingBusinessAs, faker.company.name());
+    simulateType(doingBusinessAs, companyName);
   }
 
   const streetAddress = q<HTMLInputElement>('input[data-testid="address1"]');

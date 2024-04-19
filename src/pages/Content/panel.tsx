@@ -17,9 +17,10 @@ import {
   Input,
   VStack,
 } from '@chakra-ui/react';
-
+import { Faker, en_AU, en, base } from '@faker-js/faker';
 import { RefinedIgnition } from './refined-ignition';
-import { faker } from '@faker-js/faker';
+
+const faker = new Faker({ locale: [en_AU, en, base] });
 
 export const Panel = ({
   isOpen,
@@ -30,6 +31,7 @@ export const Panel = ({
 }) => {
   const [, setToken] = useState();
   const [email, setEmail] = useState<string>();
+  const [name, setName] = useState<string>();
 
   useEffect(() => {
     chrome.storage.local
@@ -37,7 +39,9 @@ export const Panel = ({
       .then(({ accessToken, fakerSeedValue }) => {
         setToken(accessToken);
         faker.seed(fakerSeedValue);
+        const name = `${faker.person.firstName()} ${faker.person.lastName()}`;
         const email = faker.internet.email();
+        setName(name);
         setEmail(email);
       });
   }, []);
@@ -46,7 +50,9 @@ export const Panel = ({
     const fakerSeedValue = new Date().getTime();
     await chrome.storage.local.set({ fakerSeedValue });
     faker.seed(fakerSeedValue);
+    const name = faker.person.fullName();
     const email = faker.internet.email();
+    setName(name);
     setEmail(email);
   };
 
@@ -72,6 +78,10 @@ export const Panel = ({
                   <FormControl>
                     <FormLabel>Current email</FormLabel>
                     <Input isDisabled value={email} />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Current name</FormLabel>
+                    <Input isDisabled value={name} />
                   </FormControl>
                   <Button colorScheme="brand" onClick={handleResetFaker}>
                     Reset

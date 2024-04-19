@@ -1,6 +1,8 @@
 import { simulateSelect, simulateType } from './util';
-import { faker } from '@faker-js/faker';
+import { Faker, en_AU, en, base } from '@faker-js/faker';
 import { waitForElement } from '../../lib';
+
+const faker = new Faker({ locale: [en_AU, en, base] });
 
 const run = async () => {
   console.log('[DEBUG] run()');

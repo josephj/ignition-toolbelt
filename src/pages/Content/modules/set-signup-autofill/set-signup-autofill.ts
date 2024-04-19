@@ -1,6 +1,8 @@
 import { simulateClick, simulateSelect, simulateType } from './util';
-import { faker } from '@faker-js/faker';
+import { Faker, en_AU, en, base } from '@faker-js/faker';
 import { q, waitForElement } from '../../lib';
+
+const faker = new Faker({ locale: [en_AU, en, base] });
 
 const run = async (url: string, shouldClickNext = false) => {
   const { fakerSeedValue } = await chrome.storage.local.get(['fakerSeedValue']);
@@ -52,7 +54,11 @@ const run = async (url: string, shouldClickNext = false) => {
       const fullNameEl = await waitForElement<HTMLInputElement>(
         'input[name="fullName"]'
       );
-      if (fullNameEl) simulateType(fullNameEl, faker.person.fullName());
+      if (fullNameEl)
+        simulateType(
+          fullNameEl,
+          `${faker.person.firstName()} ${faker.person.lastName()}`
+        );
 
       const companyNameEl = q<HTMLInputElement>('input[name="companyName"]');
       if (companyNameEl) simulateType(companyNameEl, faker.company.name());
