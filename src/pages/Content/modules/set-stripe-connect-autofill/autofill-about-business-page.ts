@@ -1,4 +1,4 @@
-import { q, simulateSelect, simulateClick } from '../lib';
+import { q, simulateSelect, simulateClick } from '../../lib';
 
 export const autofillAboutBusinessPage = async (shouldClickNext = false) => {
   const businessTypeSelect = q('select#business_type');

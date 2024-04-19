@@ -1,7 +1,7 @@
 import {
   makeIgnitionRequest,
   makeMissionControlRequest,
-} from '../../../lib/graphql';
+} from '../../../../lib/graphql';
 
 export const getPracticeId = (href: string) => {
   const matches = href.match(

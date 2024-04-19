@@ -4,7 +4,7 @@ import {
   simulateSelect,
   simulateType,
   waitForElement,
-} from '../lib';
+} from '../../lib';
 import { Faker } from '@faker-js/faker';
 
 function generateFakeABN(faker: Faker) {

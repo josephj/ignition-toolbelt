@@ -1,4 +1,4 @@
-import { COMIC_SANS } from '../../lib/features';
+import { COMIC_SANS } from '../../../lib/features';
 
 export const setComicSans = async (value = null) => {
   const result = await chrome.storage.local.get([COMIC_SANS]);

@@ -2,9 +2,9 @@
  * Using redirect instead of opening a new window in the Mission Control
  */
 
-import { registerObserver } from './utils';
+import { registerObserver } from '../utils';
 // import { MISSION_CONTROL_REDIRECT } from '../../lib/features';
-import { q } from './lib';
+import { q } from '../lib';
 
 type FormElement = HTMLFormElement | null | undefined;
 

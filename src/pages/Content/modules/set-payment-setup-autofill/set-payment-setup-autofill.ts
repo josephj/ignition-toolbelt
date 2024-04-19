@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { q, simulateClick, simulateType, waitForElement } from '../lib';
+import { q, simulateClick, simulateType, waitForElement } from '../../lib';
 import 'arrive';
 
 const SUBMIT_BUTTON_SELECTOR = 'button[type="button"]:contains("Submit")';

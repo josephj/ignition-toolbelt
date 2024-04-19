@@ -1,5 +1,5 @@
 import { Faker, allLocales } from '@faker-js/faker';
-import { simulateClick, simulateType, waitForElement } from '../lib';
+import { simulateClick, simulateType, waitForElement } from '../../lib';
 import { autofillAboutBusinessPage } from './autofill-about-business-page';
 import { autofillBusinessDetailsPage } from './autofill-business-details-page';
 import { autofillBusinessOwnerPage } from './autofill-business-owner-page';

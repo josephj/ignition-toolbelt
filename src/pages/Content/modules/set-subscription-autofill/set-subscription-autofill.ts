@@ -1,6 +1,6 @@
 import { simulateSelect, simulateType } from './util';
 import { faker } from '@faker-js/faker';
-import { waitForElement } from '../lib';
+import { waitForElement } from '../../lib';
 
 const run = async () => {
   console.log('[DEBUG] run()');

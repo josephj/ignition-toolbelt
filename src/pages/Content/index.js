@@ -3,17 +3,17 @@ import { createRoot } from 'react-dom/client';
 
 import { App } from './App';
 
-import { setComicSans } from './set-comics-sans';
-import { setMissionControlRedirect } from './set-mission-control-redirect';
-import { setNpeExit } from './set-npe-exit';
-import { setGithubTicketAutolink } from './set-github-ticket-autolink';
-import { setJiraMissionControlLogin } from './set-jira-mission-control-login';
+import { setComicSans } from './modules/set-comics-sans';
+import { setMissionControlRedirect } from './modules/set-mission-control-redirect';
+import { setNpeExit } from './modules/set-npe-exit';
+import { setGithubTicketAutolink } from './modules/set-github-ticket-autolink';
+import { setJiraMissionControlLogin } from './modules/set-jira-mission-control-login';
 import { COMIC_SANS, NPE_EXIT } from '../../lib/features';
 import { checkAvailability } from '../Popup/utils';
-import { setPaymentSetupAutofill } from './set-payment-setup-autofill';
-import { setSignupAutofill } from './set-signup-autofill';
-import { setStripeConnectAutofill } from './set-stripe-connect-autofill';
-import { setSubscriptionAutofill } from './set-subscription-autofill';
+import { setPaymentSetupAutofill } from './modules/set-payment-setup-autofill';
+import { setSignupAutofill } from './modules/set-signup-autofill';
+import { setStripeConnectAutofill } from './modules/set-stripe-connect-autofill';
+import { setSubscriptionAutofill } from './modules/set-subscription-autofill';
 
 window.addEventListener('load', async () => {
   await setComicSans();

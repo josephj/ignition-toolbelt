@@ -1,5 +1,5 @@
 import type { Faker } from '@faker-js/faker';
-import { q, simulateClick, simulateSelect, simulateType } from '../lib';
+import { q, simulateClick, simulateSelect, simulateType } from '../../lib';
 
 export const autofillBusinessOwnerPage = async (
   faker: Faker,

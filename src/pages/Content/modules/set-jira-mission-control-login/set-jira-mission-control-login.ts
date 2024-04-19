@@ -4,8 +4,8 @@ import {
   checkPracticeLogin,
   getPracticeId,
 } from './utils';
-import { q, wait } from '../lib';
-import { makeMissionControlRequest } from '../../../lib/graphql';
+import { q, wait } from '../../lib';
+import { makeMissionControlRequest } from '../../../../lib/graphql';
 
 const DATA_ATTR = 'data-ignition-practice-reference-number';
 const LINK_CLASSNAME = 'ignt-jira-mission-control-login-link';

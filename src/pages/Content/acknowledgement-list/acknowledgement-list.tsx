@@ -12,8 +12,8 @@ import {
   useAcknowledgementAddMutation,
   useAcknowledgementRemoveMutation,
   useAcknowledgementsQuery,
-} from '../../../generated/ignition/hooks';
-import { AcknowledgementLevel } from '../../../generated/ignition/types';
+} from '@generated/ignition/hooks';
+import { AcknowledgementLevel } from '@generated/ignition/types';
 
 export const AcknowledgementList = () => {
   const { data, loading } = useAcknowledgementsQuery();

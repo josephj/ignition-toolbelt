@@ -1,6 +1,6 @@
 import { simulateClick, simulateSelect, simulateType } from './util';
 import { faker } from '@faker-js/faker';
-import { q, waitForElement } from '../lib';
+import { q, waitForElement } from '../../lib';
 
 const run = async (url: string, shouldClickNext = false) => {
   const { fakerSeedValue } = await chrome.storage.local.get(['fakerSeedValue']);

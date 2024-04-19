@@ -1,5 +1,5 @@
-import { NPE_EXIT } from '../../lib/features';
-import { registerObserver } from './utils';
+import { NPE_EXIT } from '../../../lib/features';
+import { registerObserver } from '../utils';
 
 const URI_REGEXP = /\/proposal-editor\/prop_[^\/]+\/.+/;
 
