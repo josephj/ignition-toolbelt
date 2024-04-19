@@ -1,5 +1,6 @@
 import type { Faker } from '@faker-js/faker';
 import { q, simulateClick, simulateSelect, simulateType } from '../../lib';
+import { getPostCodeByState, State } from './utils';
 
 export const autofillBusinessOwnerPage = async (
   faker: Faker,
@@ -43,12 +44,12 @@ export const autofillBusinessOwnerPage = async (
   if (streetAddress && flatUnitOther && city && state && postalCode) {
     simulateType(streetAddress, faker.location.streetAddress());
     simulateType(flatUnitOther, faker.location.secondaryAddress());
+
     simulateType(city, faker.location.city());
-    simulateSelect(
-      'select[data-testid="subregion"]',
-      faker.location.state({ abbreviated: true })
-    );
-    simulateType(postalCode, faker.location.zipCode());
+    const selectedState = faker.location.state({ abbreviated: true }) as State;
+    simulateSelect('select[data-testid="subregion"]', selectedState);
+
+    simulateType(postalCode, getPostCodeByState(faker, selectedState));
   }
 
   const phoneNumber = q<HTMLInputElement>('input[type="tel"]');

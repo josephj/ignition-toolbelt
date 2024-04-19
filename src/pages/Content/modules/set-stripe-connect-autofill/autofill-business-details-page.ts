@@ -6,6 +6,7 @@ import {
   waitForElement,
 } from '../../lib';
 import type { Faker } from '@faker-js/faker';
+import { getPostCodeByState, State } from './utils';
 
 function generateFakeABN(faker: Faker) {
   const prefix = faker.number.int({ min: 10, max: 99 }).toString();
@@ -57,16 +58,14 @@ export const autofillBusinessDetailsPage = async (
   }
 
   const state = q('select[data-testid="subregion"]');
+  const selectedState = faker.location.state({ abbreviated: true }) as State;
   if (state) {
-    simulateSelect(
-      'select[data-testid="subregion"]',
-      faker.location.state({ abbreviated: true })
-    );
+    simulateSelect('select[data-testid="subregion"]', selectedState);
   }
 
   const postalCode = q<HTMLInputElement>('input[data-testid="postal-code"]');
   if (postalCode) {
-    simulateType(postalCode, faker.location.zipCode());
+    simulateType(postalCode, getPostCodeByState(faker, selectedState));
   }
 
   const phoneNumber = q<HTMLInputElement>('input[type="tel"]');
