@@ -8,7 +8,6 @@ import { setMissionControlRedirect } from './modules/set-mission-control-redirec
 import { setNpeExit } from './modules/set-npe-exit';
 import { setGithubTicketAutolink } from './modules/set-github-ticket-autolink';
 import { setJiraMissionControlLogin } from './modules/set-jira-mission-control-login';
-import { COMIC_SANS, NPE_EXIT } from '../../lib/features';
 import { checkAvailability } from '../Popup/utils';
 import { setPaymentSetupAutofill } from './modules/set-payment-setup-autofill';
 import { setSignupAutofill } from './modules/set-signup-autofill';
@@ -27,16 +26,13 @@ window.addEventListener('load', async () => {
   await setStripeConnectAutofill();
 });
 
-const WIDGET_EXCLUDED_PATHS = ['/sign-in', '/sign-up', '/console', '/graphiql'];
-
-chrome.storage.local.onChanged.addListener(async (changes) => {
-  const keys = Object.keys(changes);
-  keys.forEach((key) => {
-    const { newValue } = changes[key];
-    if (key === COMIC_SANS) setComicSans(newValue);
-    if (key === NPE_EXIT) setNpeExit(newValue);
-  });
-});
+const WIDGET_EXCLUDED_PATHS = [
+  '/sign-in',
+  '/sign-up',
+  '/console',
+  '/graphiql',
+  '/welcome',
+];
 
 chrome.runtime.onMessage.addListener(async ({ type, value }) => {
   if (type === 'set-current-tab-credentials') {

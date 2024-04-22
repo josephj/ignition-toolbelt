@@ -1,22 +1,20 @@
-import { JIRA_MISSION_CONTROL_LOGIN } from '../Content/lib';
+import { COMIC_SANS } from '../Content/lib';
 
-(async () => {
+(() => {
   const filters = {
     url: [
       {
-        hostEquals: 'ignitionapp.atlassian.net',
-        pathContains: '/browse/',
+        hostContains: 'ignitionapp.com',
       },
       {
-        hostEquals: 'ignitionapp.atlassian.net',
-        pathContains: '/jira/servicedesk',
+        hostContains: 'localhost',
       },
     ],
   };
 
   const handleLoadPage = ({ tabId, url }: { tabId: number; url: string }) => {
     chrome.tabs.sendMessage(tabId, {
-      type: JIRA_MISSION_CONTROL_LOGIN,
+      type: COMIC_SANS,
       value: url,
     });
   };

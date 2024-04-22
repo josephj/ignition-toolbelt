@@ -1,3 +1,5 @@
+import { AUTOFILL_PAGES } from '../Content/lib';
+
 (() => {
   const filters = {
     url: [
@@ -11,8 +13,9 @@
 
   const handleLoadPage = ({ tabId, url }: { tabId: number; url: string }) => {
     chrome.tabs.sendMessage(tabId, {
-      type: 'set-payment-setup-autofill',
+      type: AUTOFILL_PAGES,
       value: url,
+      group: 'payment',
     });
   };
 

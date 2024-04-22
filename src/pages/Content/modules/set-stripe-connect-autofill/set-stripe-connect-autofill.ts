@@ -1,5 +1,10 @@
 import { en_AU, en, base, Faker } from '@faker-js/faker';
-import { simulateClick, simulateType, waitForElement } from '../../lib';
+import {
+  AUTOFILL_PAGES,
+  simulateClick,
+  simulateType,
+  waitForElement,
+} from '../../lib';
 import { autofillAboutBusinessPage } from './autofill-about-business-page';
 import { autofillBusinessDetailsPage } from './autofill-business-details-page';
 import { autofillBusinessOwnerPage } from './autofill-business-owner-page';
@@ -8,11 +13,15 @@ import 'arrive';
 const faker = new Faker({ locale: [en_AU, en, base] });
 
 const run = async (shouldClickNext = false) => {
-  const heading = await waitForElement('h1');
-  if (!heading || !heading.textContent) return;
+  const results = await chrome.storage.local.get([AUTOFILL_PAGES]);
+  const isEnabled = results[AUTOFILL_PAGES];
+  if (!isEnabled) return;
 
   const { fakerSeedValue } = await chrome.storage.local.get(['fakerSeedValue']);
   faker.seed(fakerSeedValue);
+
+  const heading = await waitForElement('h1');
+  if (!heading || !heading.textContent) return;
 
   const title = heading.textContent;
   switch (title) {
@@ -47,8 +56,8 @@ const run = async (shouldClickNext = false) => {
 };
 
 export const setStripeConnectAutofill = () => {
-  chrome.runtime.onMessage.addListener(async ({ type, value }) => {
-    if (type !== 'set-stripe-connect-autofill') {
+  chrome.runtime.onMessage.addListener(async ({ type, value, group }) => {
+    if (type !== AUTOFILL_PAGES || group !== 'stripe') {
       return;
     }
 

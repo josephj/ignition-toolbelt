@@ -18,7 +18,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { Faker, en_AU, en, base } from '@faker-js/faker';
-import { RefinedIgnition } from './refined-ignition';
+import { FeaturesSetting } from './features-setting';
 
 const faker = new Faker({ locale: [en_AU, en, base] });
 
@@ -69,9 +69,9 @@ export const Panel = ({
               <Tab>Autofill Setting</Tab>
             </TabList>
 
-            <TabPanels p={5}>
+            <TabPanels>
               <TabPanel>
-                <RefinedIgnition />
+                <FeaturesSetting />
               </TabPanel>
               <TabPanel>
                 <VStack spacing="large">

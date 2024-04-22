@@ -1,22 +1,22 @@
-import { JIRA_MISSION_CONTROL_LOGIN } from '../Content/lib';
+import { NPE_EXIT } from '../Content/lib';
 
-(async () => {
+(() => {
   const filters = {
     url: [
       {
-        hostEquals: 'ignitionapp.atlassian.net',
-        pathContains: '/browse/',
+        hostSuffix: 'ignitionapp.com',
+        pathContains: 'proposal-editor/prop_',
       },
       {
-        hostEquals: 'ignitionapp.atlassian.net',
-        pathContains: '/jira/servicedesk',
+        hostContains: 'localhost',
+        pathContains: 'proposal-editor/prop_',
       },
     ],
   };
 
   const handleLoadPage = ({ tabId, url }: { tabId: number; url: string }) => {
     chrome.tabs.sendMessage(tabId, {
-      type: JIRA_MISSION_CONTROL_LOGIN,
+      type: NPE_EXIT,
       value: url,
     });
   };

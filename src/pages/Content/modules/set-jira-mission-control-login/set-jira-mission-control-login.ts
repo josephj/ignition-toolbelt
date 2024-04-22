@@ -4,7 +4,7 @@ import {
   checkPracticeLogin,
   getPracticeId,
 } from './utils';
-import { q, wait } from '../../lib';
+import { JIRA_MISSION_CONTROL_LOGIN, q, wait, waitForElement } from '../../lib';
 import { makeMissionControlRequest } from '../../../../lib/graphql';
 
 const DATA_ATTR = 'data-ignition-practice-reference-number';
@@ -85,8 +85,28 @@ const renderContainer = (rootEl: HTMLElement, practiceId: string) => {
   return containerEl;
 };
 
-const run = async (targetEl: HTMLLinkElement) => {
-  console.log(`[DEBUG] run`, targetEl);
+const run = async (value = null) => {
+  const result = await chrome.storage.local.get([JIRA_MISSION_CONTROL_LOGIN]);
+  const isEnabled = value ? value : result[JIRA_MISSION_CONTROL_LOGIN] || false;
+  if (!isEnabled) {
+    document
+      .querySelectorAll('[data-ignition-practice-reference-number]')
+      .forEach((el) => {
+        el.removeAttribute('data-ignition-practice-reference-number');
+      });
+    document
+      .querySelectorAll('.ignt-jira-mission-control-login')
+      .forEach((el) => {
+        el.parentNode?.removeChild(el);
+      });
+    return;
+  }
+
+  const targetEl = await waitForElement<HTMLLinkElement>(
+    UNHANDLED_LINK_SELECTOR
+  );
+  if (!targetEl) return;
+
   const href = targetEl.getAttribute('href');
   if (!href) return;
 
@@ -133,24 +153,21 @@ const run = async (targetEl: HTMLLinkElement) => {
       console.error(e.message);
     }
   } finally {
-    const nextLinkEl = q(UNHANDLED_LINK_SELECTOR);
-    if (nextLinkEl) run(nextLinkEl as HTMLLinkElement);
+    run();
   }
 };
 
 export const setJiraMissionControlLogin = () => {
   chrome.runtime.onMessage.addListener(async ({ type }) => {
-    if (type === 'set-jira-mission-control-login') {
-      try {
-        setTimeout(() => {
-          const linkEl = q(UNHANDLED_LINK_SELECTOR);
-          if (linkEl) run(linkEl as HTMLLinkElement);
-        }, 1000);
-      } catch (e) {
-        if (e instanceof Error) {
-          console.error(e.message);
-        }
-      }
+    if (type === JIRA_MISSION_CONTROL_LOGIN) {
+      await run();
+    }
+  });
+
+  chrome.storage.local.onChanged.addListener(async (changes) => {
+    const featureFlags = Object.keys(changes);
+    if (featureFlags.includes(JIRA_MISSION_CONTROL_LOGIN)) {
+      await run(changes[JIRA_MISSION_CONTROL_LOGIN].newValue);
     }
   });
 };

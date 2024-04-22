@@ -1,6 +1,6 @@
-import { COMIC_SANS } from '../../../lib/features';
+import { COMIC_SANS } from '../lib';
 
-export const setComicSans = async (value = null) => {
+const run = async (value = null) => {
   const result = await chrome.storage.local.get([COMIC_SANS]);
   const isEnabled = value ? value : result[COMIC_SANS] || false;
   if (isEnabled) {
@@ -10,4 +10,19 @@ export const setComicSans = async (value = null) => {
     document.body.style.fontSize = '';
     document.body.style.fontFamily = '';
   }
+};
+
+export const setComicSans = () => {
+  chrome.runtime.onMessage.addListener(async ({ type }) => {
+    if (type === COMIC_SANS) {
+      await run();
+    }
+  });
+
+  chrome.storage.local.onChanged.addListener(async (changes) => {
+    const featureFlags = Object.keys(changes);
+    if (featureFlags.includes(COMIC_SANS)) {
+      await run(changes[COMIC_SANS].newValue);
+    }
+  });
 };

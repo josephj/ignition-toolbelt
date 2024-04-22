@@ -1,3 +1,5 @@
+import { AUTOFILL_PAGES } from '../Content/lib';
+
 (() => {
   const filters = {
     url: [
@@ -8,10 +10,11 @@
     ],
   };
 
-  const handleLoadPage = ({ tabId, url }: { tabId: number; url: string }) => {
+  const handleLoadPage = ({ tabId }: { tabId: number; url: string }) => {
     chrome.tabs.sendMessage(tabId, {
-      type: 'set-stripe-connect-autofill',
+      type: AUTOFILL_PAGES,
       value: 'main',
+      group: 'stripe',
     });
   };
 
@@ -35,8 +38,9 @@
 
   const handleLoadPage = ({ tabId }: { tabId: number; url: string }) => {
     chrome.tabs.sendMessage(tabId, {
-      type: 'set-stripe-connect-autofill',
+      type: AUTOFILL_PAGES,
       value: 'accessory',
+      group: 'stripe',
     });
   };
 

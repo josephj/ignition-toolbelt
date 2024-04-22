@@ -1,10 +1,18 @@
 import { simulateClick, simulateSelect, simulateType } from './util';
 import { Faker, en_AU, en, base } from '@faker-js/faker';
-import { q, waitForElement } from '../../lib';
+import { AUTOFILL_PAGES, q, waitForElement } from '../../lib';
+import { getEnvByUrl } from '../../../Popup/utils';
 
 const faker = new Faker({ locale: [en_AU, en, base] });
 
 const run = async (url: string, shouldClickNext = false) => {
+  const results = await chrome.storage.local.get([AUTOFILL_PAGES]);
+  const isEnabled = results[AUTOFILL_PAGES] || false;
+  if (!isEnabled) return;
+
+  const env = getEnvByUrl(url);
+  if (env === 'production') return;
+
   const { fakerSeedValue } = await chrome.storage.local.get(['fakerSeedValue']);
   faker.seed(fakerSeedValue);
 
@@ -94,10 +102,10 @@ const run = async (url: string, shouldClickNext = false) => {
   }
 };
 
-export const setSignupAutofill = () => {
-  chrome.runtime.onMessage.addListener(({ type, value }) => {
-    if (type === 'set-signup-autofill') {
-      run(value);
+export const setSignupAutofill = async () => {
+  chrome.runtime.onMessage.addListener(async ({ type, value, group }) => {
+    if (type === AUTOFILL_PAGES && group === 'signup') {
+      await run(value);
     }
   });
 };

@@ -1,11 +1,17 @@
 import { simulateSelect, simulateType } from './util';
 import { Faker, en_AU, en, base } from '@faker-js/faker';
-import { waitForElement } from '../../lib';
+import { AUTOFILL_PAGES, waitForElement } from '../../lib';
+import { getEnvByUrl } from '../../../Popup/utils';
 
 const faker = new Faker({ locale: [en_AU, en, base] });
 
-const run = async () => {
-  console.log('[DEBUG] run()');
+const run = async (url: string /*, shouldClickNext = false*/) => {
+  const results = await chrome.storage.local.get([AUTOFILL_PAGES]);
+  const isEnabled = results[AUTOFILL_PAGES] || false;
+  if (!isEnabled) return;
+
+  const env = getEnvByUrl(url);
+  if (env === 'production') return;
 
   const { fakerSeedValue } = await chrome.storage.local.get(['fakerSeedValue']);
   faker.seed(fakerSeedValue);
@@ -51,6 +57,9 @@ const run = async () => {
 
 const runRecurly = async () => {
   console.log('[DEBUG] runRecurly()');
+  const results = await chrome.storage.local.get([AUTOFILL_PAGES]);
+  const isEnabled = results[AUTOFILL_PAGES] || false;
+  if (!isEnabled) return;
 
   const numberEl = await waitForElement<HTMLInputElement>(
     '.recurly-hosted-field-input-number'
@@ -69,10 +78,10 @@ const runRecurly = async () => {
 };
 
 export const setSubscriptionAutofill = () => {
-  chrome.runtime.onMessage.addListener(({ type, value }) => {
-    if (type === 'set-subscription-autofill') {
+  chrome.runtime.onMessage.addListener(({ type, value, group }) => {
+    if (type === AUTOFILL_PAGES && group === 'subscription') {
       const isRecurly = value.includes('api.recurly.com');
-      isRecurly ? runRecurly() : run();
+      isRecurly ? runRecurly() : run(value);
     }
   });
 };

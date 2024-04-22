@@ -1,6 +1,13 @@
 import { Faker, en_AU, en, base } from '@faker-js/faker';
-import { q, simulateClick, simulateType, waitForElement } from '../../lib';
+import {
+  AUTOFILL_PAGES,
+  q,
+  simulateClick,
+  simulateType,
+  waitForElement,
+} from '../../lib';
 import 'arrive';
+import { getEnvByUrl } from '../../../Popup/utils';
 
 const SUBMIT_BUTTON_SELECTOR = 'button[type="button"]:contains("Submit")';
 const BANK_ACCOUNT_NAME_SELECTOR = 'input[placeholder="Account Holder Name"]';
@@ -10,7 +17,14 @@ const BANK_ACCOUNT_NUMBER_SELECTOR = 'input[placeholder="Account Number"]';
 
 const faker = new Faker({ locale: [en_AU, en, base] });
 
-const run = async (shouldClickNext = false) => {
+const run = async (value: string, shouldClickNext = false) => {
+  const results = await chrome.storage.local.get([AUTOFILL_PAGES]);
+  const isEnabled = results[AUTOFILL_PAGES] || false;
+  if (!isEnabled) return;
+
+  const env = getEnvByUrl(value);
+  if (env === 'production') return;
+
   const { fakerSeedValue } = await chrome.storage.local.get(['fakerSeedValue']);
   faker.seed(fakerSeedValue);
 
@@ -36,12 +50,12 @@ const run = async (shouldClickNext = false) => {
 };
 
 export const setPaymentSetupAutofill = () => {
-  chrome.runtime.onMessage.addListener(({ type }) => {
-    if (type !== 'set-payment-setup-autofill') {
+  chrome.runtime.onMessage.addListener(({ type, value, group }) => {
+    if (type !== AUTOFILL_PAGES || group !== 'payment') {
       return;
     }
 
     // @ts-ignore
-    document.arrive('.pie-auto-name-on-bank-account', () => run());
+    document.arrive('.pie-auto-name-on-bank-account', () => run(value));
   });
 };

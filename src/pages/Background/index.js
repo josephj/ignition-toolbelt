@@ -7,6 +7,8 @@ import './set-payment-setup-autofill';
 import './set-signup-autofill';
 import './set-stripe-connect-autofill';
 import './set-subscription-autofill';
+import './set-npe-exit';
+import './set-comic-sans';
 
 import { getActiveTabUrl, getHostUrl } from '../Popup/utils';
 
