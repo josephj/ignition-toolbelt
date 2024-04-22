@@ -86,6 +86,7 @@ export const Popup = () => {
         <FormControl>
           <FormLabel textAlign="center">Log in as the account</FormLabel>
           <Select<SelectOption, false, SelectOptionGroup>
+            menuIsOpen
             styles={darkThemeStyles}
             placeholder="Choose an account to log in"
             onChange={handleChange}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HStack, Stack, Text } from '@chakra-ui/react';
+import { Link, HStack, Stack, Text } from '@chakra-ui/react';
 import { useCurrentPracticeQuery } from '@generated/ignition/hooks';
 import { countryCodeToFlagEmoji } from './utils';
 import { useConsolePractice } from './use-console-practice';
@@ -16,8 +16,18 @@ export const Header = ({ csrfToken }: { csrfToken: string }) => {
     consolePractice?.paymentSettings || {};
 
   const renderPayment = () => {
+    const urlScheme = new URL(window.location.href);
+    const consoleUrl = `${urlScheme.origin}/console`;
     if (!consolePracticeData) {
-      return null;
+      return (
+        <Text fontSize="xsmall">
+          Log in to{' '}
+          <Link color="blue.500" href={consoleUrl} isExternal>
+            Mission Control
+          </Link>{' '}
+          first
+        </Text>
+      );
     }
 
     if (isDisbursalsEnabled && isCollectionsEnabled) {
