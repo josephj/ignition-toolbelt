@@ -1,3 +1,5 @@
+import { GITHUB_AUTOLINK } from '../Content/lib';
+
 (() => {
   const filters = {
     url: [
@@ -10,7 +12,7 @@
 
   const handleLoadPage = ({ tabId, url }: { tabId: number; url: string }) => {
     chrome.tabs.sendMessage(tabId, {
-      type: 'set-github-ticket-autolink',
+      type: GITHUB_AUTOLINK,
       value: url,
     });
   };
