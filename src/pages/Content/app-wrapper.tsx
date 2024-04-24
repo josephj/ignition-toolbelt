@@ -3,6 +3,7 @@ import { getHostUrl } from '../Popup/utils';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { ChakraProvider } from '@chakra-ui/react';
 import { chakraTheme } from './chakra-theme';
+import { RemoveChakraStyle } from './remove-chakra-style';
 
 const hostUrl = getHostUrl(window.location.href);
 
@@ -25,5 +26,6 @@ export const AppWrapper = ({
 }) => (
   <ApolloProvider client={createApolloClient(csrfToken)}>
     <ChakraProvider theme={chakraTheme}>{children}</ChakraProvider>
+    <RemoveChakraStyle />
   </ApolloProvider>
 );

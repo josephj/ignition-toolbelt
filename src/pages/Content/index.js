@@ -51,9 +51,9 @@ chrome.runtime.onMessage.addListener(async ({ type, value }) => {
       rootEl.id = 'ignition-toolbelt-app';
       if (document.body) {
         document.body.appendChild(rootEl);
+        const root = createRoot(rootEl);
+        root.render(<App csrfToken={value} />);
       }
-      const root = createRoot(rootEl);
-      root.render(<App csrfToken={value} />);
     }
   }
 });
