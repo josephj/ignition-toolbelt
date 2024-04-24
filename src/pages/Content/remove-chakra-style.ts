@@ -4,24 +4,30 @@ import { useEffect } from 'react';
 // removes those styles to prevent conflicts with the app.
 export const RemoveChakraStyle = () => {
   useEffect(() => {
-    const isChakraStyleTag = (tag: HTMLStyleElement) => {
-      if (!tag.textContent) return false;
+    const styleSheets = Array.from(document.styleSheets).reverse();
+    for (const styleSheet of styleSheets) {
+      const ownerNode = styleSheet.ownerNode as HTMLStyleElement;
+      if (
+        !ownerNode ||
+        !ownerNode.parentNode ||
+        ownerNode.dataset.emotion !== 'css-global'
+      ) {
+        continue;
+      }
 
-      return (
-        tag.dataset.emotion === 'css-global' &&
-        tag.textContent.includes(':root') &&
-        tag.textContent.includes('--chakra-')
+      const hasChakraStyle = Array.from(styleSheet.cssRules).some(
+        (cssRule) =>
+          // @ts-ignore
+          cssRule.selectorText &&
+          // @ts-ignore
+          cssRule.selectorText.includes(':host, :root, [data-theme]') &&
+          /--chakra-/.test(cssRule.cssText)
       );
-    };
 
-    const styleTags = document.querySelectorAll<HTMLStyleElement>(
-      'style[data-emotion="css-global"]'
-    );
-
-    const chakraStyleTag = Array.from(styleTags).find(isChakraStyleTag);
-
-    if (chakraStyleTag && chakraStyleTag.parentNode) {
-      chakraStyleTag.parentNode?.removeChild(chakraStyleTag);
+      if (hasChakraStyle) {
+        ownerNode.parentNode.removeChild(ownerNode);
+        break;
+      }
     }
   }, []);
 
