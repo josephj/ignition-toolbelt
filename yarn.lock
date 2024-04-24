@@ -2584,7 +2584,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/react@npm:^2.4.2":
+"@chakra-ui/react@npm:^2.8.2":
   version: 2.8.2
   resolution: "@chakra-ui/react@npm:2.8.2"
   dependencies:
@@ -10808,7 +10808,7 @@ __metadata:
     "@babel/plugin-proposal-class-properties": ^7.18.6
     "@babel/preset-env": ^7.20.2
     "@babel/preset-react": ^7.18.6
-    "@chakra-ui/react": ^2.4.2
+    "@chakra-ui/react": ^2.8.2
     "@emotion/react": ^11
     "@emotion/styled": ^11
     "@faker-js/faker": ^8.4.1

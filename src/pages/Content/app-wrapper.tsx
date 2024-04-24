@@ -23,9 +23,7 @@ export const AppWrapper = ({
   csrfToken: string;
   children: React.ReactNode;
 }) => (
-  <ChakraProvider theme={chakraTheme}>
-    <ApolloProvider client={createApolloClient(csrfToken)}>
-      {children}
-    </ApolloProvider>
-  </ChakraProvider>
+  <ApolloProvider client={createApolloClient(csrfToken)}>
+    <ChakraProvider theme={chakraTheme}>{children}</ChakraProvider>
+  </ApolloProvider>
 );

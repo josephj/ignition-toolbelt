@@ -1203,20 +1203,18 @@ export const chakraTheme = extendBaseTheme(theme, {
             h: '100vh',
           },
         },
-      },
-      defaultProps: {
-        size: 'xs',
-        variant: 'default',
-      },
-      variants: {
         default: {
           dialog: {
             maxW: '700px',
           },
         },
+      },
+      defaultProps: {
+        size: 'default',
+      },
+      variants: {
         white: {
           dialog: {
-            maxW: '700px',
             backgroundColor: 'white',
           },
         },

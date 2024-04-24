@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.1",
-    "@chakra-ui/react": "^2.4.2",
+    "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@faker-js/faker": "^8.4.1",
