@@ -32,6 +32,7 @@ const WIDGET_EXCLUDED_PATHS = [
   '/console',
   '/graphiql',
   '/welcome',
+  '/client-portal',
 ];
 
 chrome.runtime.onMessage.addListener(async ({ type, value }) => {
