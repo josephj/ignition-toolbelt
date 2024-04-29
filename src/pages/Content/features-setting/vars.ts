@@ -19,6 +19,11 @@ export const FEATURE_LIST: FeatureItem[] = [
       'Automatically convert Jira ticket numbers to links in GitHub.',
   },
   {
+    id: 'feature::github-autofill',
+    title: 'Autofill new GitHub PR',
+    description: 'Automatically fill in a new Github PR',
+  },
+  {
     id: 'feature::jira-mission-control-login',
     title: 'Simplify MC login in Jira',
     description:

@@ -17,7 +17,7 @@
       "matches": [
         "http://localhost:3000/*",
         "https://*.ignitionapp.com/*",
-        "https://github.com/*/pull/*",
+        "https://github.com/*",
         "https://api.recurly.com/js/v1/field.html",
         "https://ignitionapp.atlassian.net/browse/*",
         "https://ignitionapp.atlassian.net/jira/servicedesk/projects/HELP/*",
