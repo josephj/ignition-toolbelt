@@ -13,6 +13,7 @@ import { setPaymentSetupAutofill } from './modules/set-payment-setup-autofill';
 import { setSignupAutofill } from './modules/set-signup-autofill';
 import { setStripeConnectAutofill } from './modules/set-stripe-connect-autofill';
 import { setSubscriptionAutofill } from './modules/set-subscription-autofill';
+import { setGithubAutofill } from './modules/set-github-autofill';
 
 window.addEventListener('load', async () => {
   await setComicSans();
@@ -24,6 +25,7 @@ window.addEventListener('load', async () => {
   await setSubscriptionAutofill();
   await setPaymentSetupAutofill();
   await setStripeConnectAutofill();
+  await setGithubAutofill();
 });
 
 const WIDGET_EXCLUDED_PATHS = [

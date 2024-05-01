@@ -9,6 +9,7 @@ import './set-stripe-connect-autofill';
 import './set-subscription-autofill';
 import './set-npe-exit';
 import './set-comic-sans';
+import './set-github-autofill';
 
 import { getActiveTabUrl, getHostUrl } from '../Popup/utils';
 
