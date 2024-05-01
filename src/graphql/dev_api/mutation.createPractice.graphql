@@ -1,6 +1,18 @@
-mutation createPractice($name: String!, $subscriptionStatus: String) {
+mutation createPractice(
+  $name: String!
+  $subscriptionStatus: String
+  $country: String
+  $featureFlags: [String!]
+  $proposalEditor: String
+) {
   createPractice(
-    input: { name: $name, subscriptionStatus: $subscriptionStatus }
+    input: {
+      name: $name
+      subscriptionStatus: $subscriptionStatus
+      country: $country
+      featureFlags: $featureFlags
+      proposalEditor: $proposalEditor
+    }
   ) {
     practice {
       id

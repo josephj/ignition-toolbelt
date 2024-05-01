@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Center,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -24,9 +23,7 @@ export const CreateAccountModal = ({
         <ModalHeader>Create new account</ModalHeader>
         <ModalCloseButton />
         <ModalBody paddingX="xxlarge" paddingY="large">
-          <Center>
-            <CreateNewAccount />
-          </Center>
+          <CreateNewAccount />
         </ModalBody>
       </ModalContent>
     </Modal>

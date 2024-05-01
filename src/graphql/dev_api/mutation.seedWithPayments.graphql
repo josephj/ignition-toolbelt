@@ -1,5 +1,15 @@
-mutation seedPracticeWithPayments {
-  seedPracticeWithPayments(input: {}) {
+mutation seedPracticeWithPayments(
+  $countryCode: String
+  $paymentTraits: [String!]
+  $featureFlags: [String!]
+) {
+  seedPracticeWithPayments(
+    input: {
+      countryCode: $countryCode
+      paymentsTraits: $paymentTraits
+      featureFlags: $featureFlags
+    }
+  ) {
     practice {
       id
       name
