@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import {
   VStack,
@@ -12,6 +12,7 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { createBasePractice, devClient, signIn } from './util';
 import MUTATION_CREATE_STANDARD_ACCOUNT from '../../../graphql/dev_api/mutation.seedStandardPractice.graphql';
+import { Acknowledgement } from '@generated/ignition/types';
 
 const STANDARD_PRACTICE_FORM_VALUES = 'standard-practice-form-values';
 const DEFAULT_VALUES = {
@@ -71,6 +72,8 @@ const AVAILABLE_PROPOSAL_TRAITS = [
 type Integration = (typeof AVAILABLE_INTEGRATIONS)[number];
 type ProposalTrait = (typeof AVAILABLE_PROPOSAL_TRAITS)[number];
 
+const ACCESSED_ACKNOWLEDGEMENTS_LOG = 'accessed_acknowledgements';
+
 type FormValues = {
   name: string;
   country: string;
@@ -83,6 +86,7 @@ type FormValues = {
 
 export const CreateStandardPractice = () => {
   const [isProcessing, setProcessing] = useBoolean();
+  const [acks, setAcks] = useState<Acknowledgement[]>([]);
   const { control, register, reset, handleSubmit } = useForm<FormValues>({
     defaultValues: {
       name: 'Goodman & Co.',
@@ -97,10 +101,11 @@ export const CreateStandardPractice = () => {
 
   useEffect(() => {
     chrome.storage.local
-      .get([STANDARD_PRACTICE_FORM_VALUES])
+      .get([STANDARD_PRACTICE_FORM_VALUES, ACCESSED_ACKNOWLEDGEMENTS_LOG])
       .then((results) => {
         const cache = results[STANDARD_PRACTICE_FORM_VALUES] || DEFAULT_VALUES;
         reset(cache);
+        setAcks(results[ACCESSED_ACKNOWLEDGEMENTS_LOG] || []);
       });
   }, [reset]);
 
@@ -181,9 +186,9 @@ export const CreateStandardPractice = () => {
                 const values = options.map(({ value }) => value);
                 onChange(values);
               }}
-              options={[].map((val) => ({
-                value: val,
-                label: val,
+              options={acks.map(({ id }) => ({
+                value: id,
+                label: id,
               }))}
               value={(value as string[]).map((val) => ({
                 value: val,

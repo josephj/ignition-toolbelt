@@ -17,7 +17,6 @@ export const FlagOption = (props: FlagOptionProps) => {
   const handleRemove: MouseEventHandler = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('=>(elements.tsx:21) id', id);
     onRemoveOption(id);
   };
 
