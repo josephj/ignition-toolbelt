@@ -12,10 +12,30 @@ export const devClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export const createBasePractice = async ({ name = 'Hacker' } = {}) => {
+type Variables = {
+  name: string;
+  country?: string;
+  featureFlags?: string[];
+  proposalEditor?: string;
+  subscriptionStatus?: string;
+};
+
+export const createBasePractice = async ({
+  country = 'au',
+  featureFlags = [],
+  name = 'Goodman & Co.',
+  proposalEditor = 'preferred_npe',
+  subscriptionStatus = 'subscribed_core',
+}: Variables) => {
   const { data } = await devClient.mutate({
     mutation: MUTATION_CREATE_BASE_ACCOUNT,
-    variables: { name, subscriptionStatus: 'subscribed_professional' },
+    variables: {
+      country,
+      featureFlags,
+      name,
+      proposalEditor,
+      subscriptionStatus,
+    },
   });
 
   const {
