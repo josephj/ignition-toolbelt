@@ -8,6 +8,7 @@ import {
   MenuList,
   MenuButton,
   Text,
+  Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
 import React, { useState, useRef } from 'react';
@@ -30,6 +31,7 @@ import { getEnvByUrl } from '../../Popup/utils';
 import { Header } from './header';
 import { useConsolePractice } from './use-console-practice';
 import { AboutModal } from './about-modal';
+import { CopyButton } from './copy-button';
 
 const isDevelopmentEnv = getEnvByUrl(window.location.href) === 'development';
 const iconUrl = chrome.runtime.getURL('icon-128.png');
@@ -114,7 +116,20 @@ export const Bubble = ({
                 icon={<FontAwesomeIcon icon={faScrewdriverWrench} />}
                 onClick={handleClickMissionControl}
               >
-                Mission Control
+                <Flex justifyContent="space-between">
+                  <Text>Mission Control</Text>
+                  <Tooltip
+                    label="Copy Mission Control URL"
+                    aria-label="Click to copy Mission Control URL"
+                    placement="right"
+                    gutter={16}
+                    shouldWrapChildren={true}
+                  >
+                    <CopyButton
+                      value={`${window.location.origin}/console/practice/${id}`}
+                    />
+                  </Tooltip>
+                </Flex>
               </MenuItem>
               <MenuItem
                 icon={<FontAwesomeIcon icon={faFlag} />}
@@ -136,12 +151,23 @@ export const Bubble = ({
                   // @ts-ignore
                   icon={<FontAwesomeIcon icon={faStripeS} />}
                 >
-                  <HStack>
-                    <Text>Stripe dashboard</Text>
-                    <Text as="span" fontSize="xsmall">
-                      <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-                    </Text>
-                  </HStack>
+                  <Flex justifyContent="space-between">
+                    <HStack>
+                      <Text>Stripe dashboard</Text>
+                      <Text as="span" fontSize="xsmall">
+                        <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                      </Text>
+                    </HStack>
+                    <Tooltip
+                      label="Copy Mission Control URL"
+                      aria-label="Click to Stripe Dashboard URL"
+                      placement="right"
+                      gutter={16}
+                      shouldWrapChildren={true}
+                    >
+                      <CopyButton value={stripeDashboardUri} />
+                    </Tooltip>
+                  </Flex>
                 </MenuItem>
               ) : null}
               {isDevelopmentEnv ? (

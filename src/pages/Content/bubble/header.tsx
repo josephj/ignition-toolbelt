@@ -3,6 +3,7 @@ import { Link, HStack, Stack, Text } from '@chakra-ui/react';
 import { useCurrentPracticeQuery } from '@generated/ignition/hooks';
 import { countryCodeToFlagEmoji } from './utils';
 import { useConsolePractice } from './use-console-practice';
+import { CopyButton } from './copy-button';
 
 export const Header = ({ csrfToken }: { csrfToken: string }) => {
   const { data } = useCurrentPracticeQuery();
@@ -67,6 +68,14 @@ export const Header = ({ csrfToken }: { csrfToken: string }) => {
             </Text>
           ) : null}
         </HStack>
+        {id ? (
+          <HStack alignItems="center">
+            <Text color="faint" fontSize="xxsmall">
+              {id}
+            </Text>
+            <CopyButton value={id} />
+          </HStack>
+        ) : null}
         {renderPayment()}
       </Stack>
     </HStack>
