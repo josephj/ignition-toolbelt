@@ -8,9 +8,9 @@ import {
   Switch,
   Text,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import React, {useEffect, useState} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faXmark} from '@fortawesome/free-solid-svg-icons';
 import {
   useAcknowledgementAddMutation,
   useAcknowledgementRemoveMutation,
@@ -24,23 +24,23 @@ import {
 const ACCESSED_ACKNOWLEDGEMENTS_LOG = 'accessed_acknowledgements';
 
 export const AcknowledgementList = () => {
-  const { data, loading, refetch } = useAcknowledgementsQuery();
+  const {data, loading, refetch} = useAcknowledgementsQuery();
   const [acks, setAcks] = useState<Acknowledgement[]>([]);
-  const [acknowledgementRemove, { loading: isProcessingRemoveAck }] =
+  const [acknowledgementRemove, {loading: isProcessingRemoveAck}] =
     useAcknowledgementRemoveMutation();
-  const [acknowledgementAdd, { loading: isProcessingAddAck }] =
+  const [acknowledgementAdd, {loading: isProcessingAddAck}] =
     useAcknowledgementAddMutation();
 
   useEffect(() => {
     if (!data) {
       return;
     }
-    const { acknowledgements = [] } = data;
+    const {acknowledgements = []} = data;
 
     chrome.storage.local.get([ACCESSED_ACKNOWLEDGEMENTS_LOG], (result) => {
       const savedAcks = result[ACCESSED_ACKNOWLEDGEMENTS_LOG] || [];
       const newAcks = acknowledgements.filter(
-        ({ id }) => !savedAcks.some((ack: Acknowledgement) => (ack.id = id))
+        ({id}) => !savedAcks.some((ack: Acknowledgement) => (ack.id === id))
       );
       if (newAcks.length) {
         const nextAcks = [...savedAcks, ...newAcks];
@@ -62,9 +62,9 @@ export const AcknowledgementList = () => {
     checked: boolean
   ) => {
     if (!checked) {
-      await acknowledgementRemove({ variables: { id, level } });
+      await acknowledgementRemove({variables: {id, level}});
     } else {
-      await acknowledgementAdd({ variables: { id, level } });
+      await acknowledgementAdd({variables: {id, level}});
     }
     await refetch();
   };
@@ -84,7 +84,7 @@ export const AcknowledgementList = () => {
   };
 
   const acknowledgements = acks
-    .map(({ id, ...rest }) => {
+    .map(({id, ...rest}) => {
       const matched = data.acknowledgements.find((ack) => ack.id === id);
       return {
         id,
@@ -97,7 +97,7 @@ export const AcknowledgementList = () => {
 
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-      {acknowledgements?.map(({ id, isEnabled, level, updatedAt }) => (
+      {acknowledgements?.map(({id, isEnabled, level, updatedAt}) => (
         <GridItem
           borderRadius="md"
           borderColor="gray.200"
@@ -112,7 +112,7 @@ export const AcknowledgementList = () => {
               defaultChecked={isEnabled}
               isDisabled={isProcessingRemoveAck || isProcessingAddAck}
               onChange={(e) => handleToggleAck(id, level, e.target.checked)}
-              {...{ id }}
+              {...{id}}
             />
             <FormLabel m={0} htmlFor={id} flex="1">
               <Text>{id}</Text>
@@ -132,7 +132,7 @@ export const AcknowledgementList = () => {
               {level}
             </Badge>
             <Link colorScheme="blue" onClick={() => handleRemove(id)}>
-              <FontAwesomeIcon icon={faXmark} />
+              <FontAwesomeIcon icon={faXmark}/>
             </Link>
           </HStack>
         </GridItem>
