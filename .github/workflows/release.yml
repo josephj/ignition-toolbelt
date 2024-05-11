@@ -1,0 +1,46 @@
+name: Package and Release
+
+on:
+  push:
+    tags:
+      - 'v*' # This workflow triggers on push events to tags with 'v' prefix, e.g., v1.0
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install # If you have any build steps that require npm dependencies
+
+      - name: Build extension
+        run: npm run build # Replace this with your actual build command
+
+      - name: Package extension into a zip file
+        run: |
+          zip -r release.zip dist/ # Replace 'dist/' with the directory containing your built extension files
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub automatically creates this secret to authenticate in your workflow
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: 'Description of the release'
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This is the URL for uploading assets to the release
+          asset_path: ./release.zip
+          asset_name: release.zip
+          asset_content_type: application/zip
+
