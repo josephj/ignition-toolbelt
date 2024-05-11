@@ -1,5 +1,8 @@
 name: Package and Release
 
+permissions:
+  contents: write
+
 on:
   push:
     tags:
@@ -20,7 +23,7 @@ jobs:
 
       - name: Package extension into a zip file
         run: |
-          mv ./dist/*.zip ./release.zip
+          mv ./zip/*.zip ./release.zip
 
       - name: Create Release
         id: create_release
