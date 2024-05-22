@@ -8,7 +8,7 @@ import { AppStatus } from './app-status';
 import { MissionControl } from './mission-control';
 import { AcknowledgementModal } from './acknowledgement-modal';
 import { CreateAccountModal } from './create-account-modal';
-import { GraphiqlModal } from './graphiql-modeal';
+import { GraphiqlModal } from './graphiql-modal';
 
 export const App = ({ csrfToken }: { csrfToken: string }) => {
   const [missionControlUrl, setMissionControlUrl] = useState<string>();
@@ -63,13 +63,19 @@ export const App = ({ csrfToken }: { csrfToken: string }) => {
         url={missionControlUrl}
         name={missionControlName}
         isOpen={isMissionControlVisible}
-        onClose={setMissionControlVisibility.off}
+        onClose={() => {
+          console.log('Mission control onClose');
+          setMissionControlVisibility.off();
+        }}
       />
       <GraphiqlModal
         url={graphiqlUrl}
         name={graphiqlName}
         isOpen={isGraphiqlVisible}
-        onClose={setGraphiqlVisibility.off}
+        onClose={() => {
+          console.log('Graphql onClose');
+          setGraphiqlVisibility.off();
+        }}
       />
       <AcknowledgementModal
         isOpen={isAcknowledgementVisible}

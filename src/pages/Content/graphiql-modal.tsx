@@ -1,10 +1,10 @@
 import {
-  CloseButton,
   Flex,
   HStack,
   Link,
   Modal,
   ModalBody,
+  CloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
@@ -23,11 +23,11 @@ type Props = {
   onClose(): void;
 };
 
-export const MissionControl = ({ url, name, isOpen, onClose }: Props) => {
+export const GraphiqlModal = ({ url, name, isOpen, onClose }: Props) => {
   const [isRendered, setRendered] = useBoolean();
   const [isVisible, setVisibility] = useBoolean();
-
   const ref = useRef<HTMLElement>(null);
+
   useOutsideClick({
     ref: ref,
     handler: () => {
@@ -75,12 +75,13 @@ export const MissionControl = ({ url, name, isOpen, onClose }: Props) => {
       closeOnEsc={false}
       closeOnOverlayClick={false}
       onClose={handleOriginalClose}
-      trapFocus={isVisible}
       size="8xl"
+      trapFocus={isVisible}
     >
       {isVisible ? <ModalOverlay /> : null}
       <ModalContent
         maxWidth="95%"
+        ref={ref}
         width="1400px"
         sx={
           !isVisible
@@ -92,7 +93,6 @@ export const MissionControl = ({ url, name, isOpen, onClose }: Props) => {
               }
             : undefined
         }
-        ref={ref}
       >
         <ModalHeader>
           <Flex justifyContent="space-between">
@@ -102,7 +102,7 @@ export const MissionControl = ({ url, name, isOpen, onClose }: Props) => {
                 <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
               </Link>
             </HStack>
-            <CloseButton alignSelf="left" onClick={handleClickClose} />
+            <CloseButton onClick={handleClickClose} />
           </Flex>
         </ModalHeader>
         <ModalBody pb="xlarge">

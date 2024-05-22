@@ -22,7 +22,7 @@ export const AcknowledgementModal = ({
       <ModalContent>
         <ModalHeader>Acknowledgements</ModalHeader>
         <ModalCloseButton />
-        <ModalBody paddingX="xxlarge" paddingY="large">
+        <ModalBody paddingX="xxlarge" paddingY="large" minHeight="500px">
           <AcknowledgementList />
         </ModalBody>
       </ModalContent>
