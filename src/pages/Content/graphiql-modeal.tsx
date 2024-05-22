@@ -21,7 +21,7 @@ type Props = {
   onClose(): void;
 };
 
-export const MissionControl = ({ url, name, isOpen, onClose }: Props) => {
+export const GraphiqlModal = ({ url, name, isOpen, onClose }: Props) => {
   const [isRendered, setRendered] = useBoolean();
 
   useEffect(() => {

@@ -98,7 +98,7 @@ export const Panel = ({
                 <Tab>Autofill onboarding pages</Tab>
               ) : null}
               {isGithubAutofillEnabled ? (
-                <Tab>Github Autofill Setting</Tab>
+                <Tab>Autofill Github pull request</Tab>
               ) : null}
             </TabList>
 

@@ -42,12 +42,14 @@ export const Bubble = ({
   onPanelClick,
   onAcknowledgementClick,
   onClickCreateNewAccount,
+  onClickGraphiql,
 }: {
   csrfToken: string;
   onMissionControlClick(url: string, name: string): void;
   onPanelClick(): void;
   onAcknowledgementClick(): void;
   onClickCreateNewAccount(): void;
+  onClickGraphiql(url: string, name: string): void;
 }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [position] = useState({ x: 50, y: -100 });
@@ -73,7 +75,7 @@ export const Bubble = ({
     if (e.metaKey) {
       window.open(url);
     } else {
-      onMissionControlClick(url, 'GraphiQL');
+      onClickGraphiql(url, 'GraphiQL');
     }
   };
 
@@ -159,7 +161,7 @@ export const Bubble = ({
                       </Text>
                     </HStack>
                     <Tooltip
-                      label="Copy Mission Control URL"
+                      label="Copy Stripe Dashboard URL"
                       aria-label="Click to Stripe Dashboard URL"
                       placement="right"
                       gutter={16}

@@ -1,8 +1,46 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { useForm, Controller } from 'react-hook-form';
-import { Button, FormControl, FormLabel, VStack } from '@chakra-ui/react';
+import {
+  Button,
+  Link,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCheckCircle,
+  faCircleXmark,
+} from '@fortawesome/free-solid-svg-icons';
+
 import { GITHUB_AUTOFILL_SETTING } from './lib';
+
+const checkTokenValid = async (token: string) => {
+  try {
+    const response = await fetch('https://api.github.com/user', {
+      method: 'GET',
+      headers: {
+        Authorization: `token ${token}`,
+        Accept: 'application/vnd.github.v3+json',
+      },
+    });
+    const scopes = response.headers.get('x-oauth-scopes');
+    if (response.status !== 200 || !scopes) {
+      return false;
+    }
+
+    const tokenScopes = scopes.split(', ').map((scope) => scope.trim());
+    return ['repo', 'user'].every((scope) => tokenScopes.includes(scope));
+  } catch (e) {
+    return false;
+  }
+};
 
 const availableReviewers = [
   { label: 'Andrei Railean', value: 'AndreiRailean' },
@@ -52,33 +90,46 @@ const availableLabels = [
 type FormValues = {
   reviewers: string[];
   labels: string[];
+  token: string;
 };
 
 export const GithubAutofillSetting = () => {
-  const { formState, control, handleSubmit, reset } = useForm<FormValues>({
-    defaultValues: {
-      reviewers: [],
-      labels: [],
-    },
-  });
+  const [isTokenValid, setTokenValid] = useState<boolean | null>(null);
+  const { formState, control, handleSubmit, register, reset, watch } =
+    useForm<FormValues>({
+      defaultValues: {
+        reviewers: [],
+        labels: [],
+        token: '',
+      },
+    });
 
   const { isDirty, isLoading } = formState;
+  const [token] = watch(['token']);
+
+  useEffect(() => {
+    if (token) {
+      checkTokenValid(token).then((isValid) => setTokenValid(isValid));
+    }
+  }, [setTokenValid, token]);
 
   useEffect(() => {
     chrome.storage.local.get([GITHUB_AUTOFILL_SETTING]).then((results) => {
-      const { reviewers, labels } = results[GITHUB_AUTOFILL_SETTING] || {
+      const { reviewers, labels, token } = results[GITHUB_AUTOFILL_SETTING] || {
         reviewers: [],
         labels: [],
+        token: '',
       };
-      reset({ reviewers, labels });
+      reset({ reviewers, labels, token });
     });
   }, [reset]);
 
-  const handleSave = ({ labels, reviewers }: FormValues) => {
+  const handleSave = ({ token, labels, reviewers }: FormValues) => {
     chrome.storage.local.set({
       [GITHUB_AUTOFILL_SETTING]: {
         labels,
         reviewers,
+        token,
       },
     });
     reset({ reviewers, labels });
@@ -134,6 +185,30 @@ export const GithubAutofillSetting = () => {
               />
             )}
           />
+        </FormControl>
+        <FormControl marginBottom={4}>
+          <FormLabel htmlFor="githubToken">GitHub Token</FormLabel>
+          <InputGroup>
+            <Input type="text" {...register('token')} />
+            <InputRightElement>
+              <Text color={isTokenValid ? 'green.500' : 'red.500'}>
+                <FontAwesomeIcon
+                  icon={isTokenValid ? faCheckCircle : faCircleXmark}
+                />
+              </Text>
+            </InputRightElement>
+          </InputGroup>
+          <FormHelperText>
+            It will be used for fetching your PR details. You can get your
+            Github token here:{' '}
+            <Link
+              color="blue.500"
+              href="https://github.com/settings/tokens/new"
+              isExternal
+            >
+              Github Token
+            </Link>
+          </FormHelperText>
         </FormControl>
         <Button
           type="submit"
