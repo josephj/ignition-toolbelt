@@ -66,7 +66,7 @@ type MakeMissionControlRequestOptions = Omit<MakeRequestOptions, 'url'>;
 export const makeMissionControlRequest = async (
   request: MakeMissionControlRequestOptions
 ) => {
-  const key = 'credential::mission-control-production';
+  const key = 'credential::ignition-production';
   const cache = await chrome.storage.local.get([key]);
   const cacheValue = cache[key] || {};
   return makeRequest({

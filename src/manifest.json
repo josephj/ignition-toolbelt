@@ -15,8 +15,8 @@
   "content_scripts": [
     {
       "matches": [
-        "http://localhost:3000/*",
         "https://*.ignitionapp.com/*",
+        "http://localhost:3000/*",
         "https://github.com/*",
         "https://api.recurly.com/js/v1/field.html",
         "https://ignitionapp.atlassian.net/browse/*",
@@ -37,7 +37,6 @@
     "storage",
     "tabs",
     "cookies",
-    "management",
     "webNavigation"
   ],
   "host_permissions": [
@@ -48,7 +47,6 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "injected.js",
         "content.styles.css",
         "icon-128.png",
         "icon-34.png"
