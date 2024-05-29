@@ -32,7 +32,6 @@ export const Panel = ({
   isOpen: boolean;
   onClose(): void;
 }) => {
-  const [, setToken] = useState();
   const [email, setEmail] = useState<string>();
   const [name, setName] = useState<string>();
   const [isGithubAutofillEnabled, setGithubAutofillEnablility] = useBoolean();
@@ -40,10 +39,9 @@ export const Panel = ({
 
   useEffect(() => {
     chrome.storage.local
-      .get(['accessToken', 'fakerSeedValue', GITHUB_AUTOFILL, AUTOFILL_PAGES])
+      .get(['fakerSeedValue', GITHUB_AUTOFILL, AUTOFILL_PAGES])
       .then((results) => {
-        const { accessToken, fakerSeedValue } = results;
-        setToken(accessToken);
+        const { fakerSeedValue } = results;
         faker.seed(fakerSeedValue);
         const name = `${faker.person.firstName()} ${faker.person.lastName()}`;
         const email = faker.internet.email();
